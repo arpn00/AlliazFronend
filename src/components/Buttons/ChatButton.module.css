@@ -1,0 +1,23 @@
+.buttonContainer
+{
+    display: 'flex';
+     justify-content: 'flex-start';
+      margin-top:'5px';
+}
+
+.buttonContainer > button
+{
+    background-color: 'white';
+    color : 'black';
+    padding: '10px 20px';
+    border: 'none';
+    cursor: 'pointer';
+    margin-right: '10px';
+    border-radius : '20px';
+    border-style : 'groove';
+}
+
+.buttonContainer > button{
+    cursor: not-allowed;
+    pointer-events: all !important;
+  }
