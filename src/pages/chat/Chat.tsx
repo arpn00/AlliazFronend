@@ -14,6 +14,8 @@ import { getCitationForSelectedTask, getAnalysisQuestion, getAllAnalysisQuestion
 import { AnalysisPanel } from "../../components/AnalysisPanel/AnalysisPanel.tsx";
 import { AnalysisPanelTabs } from "../../components/AnalysisPanel/AnalysisPanelTabs.tsx";
 import { CompoundButton } from "@fluentui/react-components";
+import { Panel, PanelType } from '@fluentui/react/lib/Panel';
+import { initializeIcons } from "@fluentui/react/lib/Icons";
 
 const useStyles = makeStyles({
   innerWrapper: {
@@ -58,7 +60,6 @@ const Chat = ({
   const [streamedAnswers, setStreamedAnswers] = useState<[user: string, response: ChatAppResponse][]>([]);
   const [welcomePromptAnswer, setwelcomePromptAnswer] = useState<ChatAppResponse[]>([]);
 
-
   const SideBarStyles: React.CSSProperties = {
 
     flexDirection: 'column',
@@ -72,6 +73,12 @@ const Chat = ({
     width: 180,
     minHeight: "975px"
   };
+  useEffect(() => chatMessageStreamEnd.current?.scrollIntoView({ behavior: "smooth" }), [isLoading]);
+  useEffect(() => chatMessageStreamEnd.current?.scrollIntoView({ behavior: "auto" }), [answers]);
+
+  initializeIcons();
+
+
   const makeApiRequest = async (question: string) => {
     lastQuestionRef.current = question;
     error && setError(undefined);
@@ -169,7 +176,7 @@ const Chat = ({
         let questionsReponse: ChatAppResponse = {
           choices: [{
             index: 0,
-            buttons: [{key:"startCopilot",text:"Okay , start engine"}],
+            buttons: [{ key: "startCopilot", text: "Okay , start engine" }],
             context: {
               data_points: [],
               followup_questions: null,
@@ -233,7 +240,6 @@ const Chat = ({
       setActiveAnalysisPanelTab(tab);
     }
     setSelectedAnswer(index);
-
   };
 
 
@@ -269,7 +275,7 @@ const Chat = ({
                       answer={streamedAnswer}
                       isStreaming={false}
                       isSelected={false}
-                      buttons= {streamedAnswer.choices[0].buttons}
+                      buttons={streamedAnswer.choices[0].buttons}
                       onCitationClicked={c => onShowCitation(c, index)}
                       onChatButtonClicked={(c, t) => onChatButtonClicked(c, t)}
                     ></Answer>
@@ -288,7 +294,7 @@ const Chat = ({
                       answer={answer[1]}
                       isSelected={selectedAnswer === index && activeAnalysisPanelTab !== undefined}
                       onCitationClicked={c => onShowCitation(c, index)}
-                      buttons= {answer[1].choices[0].buttons}
+                      buttons={answer[1].choices[0].buttons}
                       onChatButtonClicked={(c, t) => onChatButtonClicked(c, t)}
                     />
                   </div>
@@ -324,14 +330,22 @@ const Chat = ({
         </div>
 
         {activeAnalysisPanelTab && (
-          <AnalysisPanel
-            className={styles.chatAnalysisPanel}
-            activeCitation={activeCitation}
-            onActiveTabChanged={x => onToggleTab(x, selectedAnswer)}
-            citationHeight="750px"
-            answer={welcomePromptAnswer[0]}
-            activeTab={activeAnalysisPanelTab}
-          />
+          <Panel
+            isOpen={activeAnalysisPanelTab !== undefined}
+            isBlocking={false}
+            closeButtonAriaLabel="Close"
+            onDismiss={() => setActiveAnalysisPanelTab(undefined)}
+            type={PanelType.medium}
+          >
+            <AnalysisPanel
+              className={styles.chatAnalysisPanel}
+              activeCitation={activeCitation}
+              onActiveTabChanged={x => onToggleTab(x, selectedAnswer)}
+              citationHeight="750px"
+              answer={welcomePromptAnswer[0]}
+              activeTab={activeAnalysisPanelTab} />
+          </Panel>
+
         )}
       </div>
     </div>
