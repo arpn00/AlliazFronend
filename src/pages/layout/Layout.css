@@ -1,0 +1,75 @@
+.container {  display: grid;
+  grid-template-columns: 0.2fr 1.8fr;
+  grid-auto-columns: 1fr;
+  gap: 0px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "NavTog Body"
+    "NavBottom Body";
+    height: inherit;
+}
+
+.NavTog {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 0.6fr 0.6fr 0.6fr 2.2fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    ". Icon ."
+    ". IconText ."
+    ". HomeIcon ."
+    ". HistoryIcon .";
+  grid-area: NavTog;
+  background-color: #F3F2F1;
+}
+
+.Icon {
+  align-self: end;
+  grid-area: Icon;
+}
+
+.IconText {
+  justify-self: center;
+  align-self: start;
+  grid-area: IconText;
+  font-size: 15px;
+}
+
+.HomeIcon {
+  justify-self: center;
+  align-self: start;
+  grid-area: HomeIcon;
+}
+
+.HistoryIcon {
+  justify-self: center;
+  align-self: start;
+  grid-area: HistoryIcon;
+}
+
+.NavBottom {
+  display: grid; 
+  grid-auto-columns: 1fr; 
+  grid-template-rows: 1fr 1fr 1fr; 
+  gap: 0px 0px; 
+  grid-area: NavBottom; 
+  background-color: #F3F2F1;
+
+}
+.Persona {
+  justify-self: center; 
+  align-self: end; 
+  grid-area: 3 / 1 / 4 / 2; 
+}
+
+.Body { grid-area: Body; }
+
+
+#root
+{
+  height: inherit;
+}

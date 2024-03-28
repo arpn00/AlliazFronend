@@ -1,0 +1,52 @@
+.DataSourceDiv {
+  display: grid; 
+  grid-template-columns: 0.2fr 1fr 0.2fr; 
+  grid-template-rows: 0.3fr 0.2fr 0.2fr 0.2fr 0.2fr 0.2fr 0.5fr 0.2fr; 
+  gap: 10px 0px; 
+    grid-template-areas: 
+    ". SourceDiv ."
+    ". SourceCheckBoxDiv ."
+    ". TimeFrameDiv ."
+    ". TimeFrameSelectorDiv ."
+    ". DocumentsHeaderDiv ."
+    ". DocumentsSelectorDiv ."
+    ". ContinueButtonDiv ."
+    ". . ."; 
+  grid-area: DataSourceDiv; 
+  border: 2px solid gray;
+}
+.SourceDiv {
+  justify-self: center; 
+  align-self: end; 
+  grid-area: SourceDiv; 
+}
+.SourceCheckBoxDiv {
+  justify-self: center; 
+  align-self: start; 
+  grid-area: SourceCheckBoxDiv; 
+}
+.TimeFrameDiv {
+  justify-self: center; 
+  align-self: end; 
+  grid-area: TimeFrameDiv; 
+}
+.TimeFrameSelectorDiv {
+  justify-self: center; 
+  align-self: start; 
+  grid-area: TimeFrameSelectorDiv; 
+}
+.DocumentsHeaderDiv {
+  justify-self: center; 
+  align-self: end; 
+  grid-area: DocumentsHeaderDiv; 
+}
+.DocumentsSelectorDiv {
+  justify-self: center; 
+  align-self: start; 
+  grid-area: DocumentsSelectorDiv; 
+}
+.ContinueButtonDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: ContinueButtonDiv; 
+}

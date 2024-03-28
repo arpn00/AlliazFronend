@@ -1,0 +1,40 @@
+.ProgressGrid {
+    display: grid; 
+    grid-template-columns: 1fr; 
+    grid-template-rows: 1fr 1fr 0.3fr 1fr 0.3fr 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "."
+      "HeaderDiv"
+      "."
+      "SubHeadingDiv"
+      "."
+      "StepperDiv"; 
+    grid-area: ProgressGrid; 
+  }
+  .HeaderDiv {
+    justify-self: center; 
+    align-self: center; 
+    grid-area: HeaderDiv; 
+  }
+  .SubHeadingDiv {
+    justify-self: center; 
+    align-self: center; 
+    grid-area: SubHeadingDiv; 
+  }
+  .StepperDiv {
+    display: grid; 
+    grid-auto-flow: column; 
+    grid-auto-columns: 1fr; 
+    grid-auto-rows: 1fr; 
+    grid-template-columns: 0.2fr 1fr 0.2fr; 
+    gap: 0px 0px; 
+    grid-area: StepperDiv; 
+  }
+  .StepperProgressDiv {
+    justify-self: stretch; 
+    align-self: center; 
+    grid-area: 1 / 2 / 2 / 3; 
+  }
+  
+  .FooterGrid { grid-area: FooterGrid; }
