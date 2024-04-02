@@ -7,22 +7,24 @@ interface TopicTemplateProps {
   heading: string;
   color?: string;
   newTemplate?: boolean;
+  onClick : () => void;
 }
 export const TopicTemplate: FC<TopicTemplateProps> = ({
   heading,
   newTemplate = false,
   color = "#555555",
+  onClick
 }) => {
   return (
     <div className="card">
       <div className="card-heading">{heading}</div>
       <div className="icon">
         {newTemplate ? (
-          <IconButton>
-            <Add24Filled primaryFill={color}></Add24Filled>
+          <IconButton onClick={onClick}>
+            <Add24Filled primaryFill={color} ></Add24Filled>
           </IconButton>
         ) : (
-          <IconButton>
+          <IconButton onClick={onClick}>
             <Edit24Filled primaryFill={color}></Edit24Filled>
           </IconButton>
         )}
