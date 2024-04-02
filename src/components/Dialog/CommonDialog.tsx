@@ -11,6 +11,11 @@ export interface CommonDialogProps {
     secondaryActionText?: string;
     onSecondaryAction?: () => void;
     hiddenSecondaryButton?: boolean;
+    onPrimaryAction?: () => void;
+    primaryActionText?: string;
+    primaryIcon?: Slot<'span'>;
+    primaryIconPosition?: 'before' | 'after';
+    disablePrimaryAction?: boolean;
 }
 const useStyle = makeStyles({
     title: {
@@ -30,7 +35,13 @@ export const CommonDialog: FC<PropsWithChildren<CommonDialogProps>> = (props: Pr
         secondaryIconPosition,
         maxWidth,
         hiddenSecondaryButton,
-    } = props;
+        onPrimaryAction,
+        primaryActionText,
+        primaryIcon,
+        primaryIconPosition,
+        disablePrimaryAction
+
+        } = props;
     const classes = useStyle();
     return (
         <Dialog open={open}>
@@ -45,6 +56,18 @@ export const CommonDialog: FC<PropsWithChildren<CommonDialogProps>> = (props: Pr
                                 </Button>
                             ) : null}
                         </DialogTrigger>
+                        {onPrimaryAction ? (
+                            <Button
+                                type='button'
+                                iconPosition={primaryIconPosition}
+                                icon={primaryIcon}
+                                disabled={disablePrimaryAction}
+                                appearance='primary'
+                                onClick={onPrimaryAction}
+                            >
+                                {primaryActionText}
+                            </Button>
+                        ) : null}
                     </DialogActions>
                 </DialogBody>
             </DialogSurface>
