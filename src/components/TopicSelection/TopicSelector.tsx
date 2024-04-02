@@ -1,12 +1,16 @@
 import React from "react";
 import { FC } from "react";
-import { Text, Checkbox, Button, Input } from "@fluentui/react-components";
+import { Text, Button, Input } from "@fluentui/react-components";
 import { TopicTemplate } from "./TopicTemplate.tsx";
 import "./TopicSelector.css";
-import { TagMultiple24Filled,Next16Filled } from '@fluentui/react-icons';
+import { TagMultiple24Filled, Next16Filled } from "@fluentui/react-icons";
 
-interface TopicSelectorProps {}
+interface TopicSelectorProps {
+  onContinue: () => void;
+}
 const TopicSelector: FC<TopicSelectorProps> = (props) => {
+  const { onContinue } = props;
+
   return (
     <div className="TopicSelectionDiv">
       <div className="TopicHeaderDiv">
@@ -35,9 +39,8 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
       <div className="TagsDiv">
         <Input
           size="large"
-          style={{width:'400px'}}
-          contentBefore={<TagMultiple24Filled primaryFill="#0077be" 
-          />}
+          style={{ width: "400px" }}
+          contentBefore={<TagMultiple24Filled primaryFill="#0077be" />}
         />
       </div>
       <div className="ButtonDiv">
@@ -46,8 +49,9 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
           size="medium"
           icon={<Next16Filled />}
           iconPosition="after"
+          onClick={onContinue}
         >
-          Continue
+          Craete Draft
         </Button>
       </div>
     </div>

@@ -4,12 +4,13 @@ import SourcesTemplate from "../../components/PageTemplates/SourcesTemplate.tsx"
 import DataSource from "../../components/DataSource/DataSource.tsx";
 import { FC } from "react";
 import TopicSelector from "../TopicSelection/TopicSelector.tsx";
+import SpinnerLogo from "../Spinner/Spinner.tsx";
 interface BodyProps {}
 
 const Body: FC<BodyProps> = (props) => {
-  const [currentStep, setCutrrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const onContinue = () => {
-    setCutrrentStep(currentStep + 1);
+    setCurrentStep(currentStep + 1);
   };
   return (
     <div className="Body">
@@ -31,8 +32,8 @@ const Body: FC<BodyProps> = (props) => {
           activeStep={currentStep}
         ></SourcesTemplate>
       ) : null}
-       {currentStep === 1 ? (
-        <TopicSelector></TopicSelector>
+      {currentStep === 1 ? (
+        <TopicSelector onContinue={onContinue}></TopicSelector>
       ) : null}
       {currentStep === 2 ? (
         <SourcesTemplate
@@ -40,6 +41,7 @@ const Body: FC<BodyProps> = (props) => {
           activeStep={currentStep}
         ></SourcesTemplate>
       ) : null}
+      {currentStep === 2 ? <SpinnerLogo></SpinnerLogo> : null}
       <div className="FooterGrid"></div>
     </div>
   );
