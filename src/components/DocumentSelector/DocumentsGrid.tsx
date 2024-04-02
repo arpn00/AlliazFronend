@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {
   FolderRegular,
@@ -7,10 +6,10 @@ import {
   DocumentRegular,
   PeopleRegular,
   DocumentPdfRegular,
+  MailLinkRegular,
   VideoRegular,
 } from "@fluentui/react-icons";
 import {
-  PresenceBadgeStatus,
   Avatar,
   TableBody,
   TableCell,
@@ -25,86 +24,64 @@ import {
   useTableSelection,
   createTableColumn,
 } from "@fluentui/react-components";
+
+import {
+  DocumentPdf24Filled,
+  MailLink24Filled,
+} from "@fluentui/react-icons";
 type FileCell = {
-    label: string;
-    icon: JSX.Element;
-  };
-  
-  type LastUpdatedCell = {
-    label: string;
-    timestamp: number;
-  };
-  
-  type LastUpdateCell = {
-    label: string;
-    icon: JSX.Element;
-  };
-  
-  type AuthorCell = {
-    label: string;
-    status: PresenceBadgeStatus;
-  };
-  
-  type Item = {
-    file: FileCell;
-    author: AuthorCell;
-    lastUpdated: LastUpdatedCell;
-    lastUpdate: LastUpdateCell;
-  };
-  
-  const items: Item[] = [
-    {
-      file: { label: "Meeting notes", icon: <DocumentRegular /> },
-      author: { label: "Max Mustermann", status: "available" },
-      lastUpdated: { label: "7h ago", timestamp: 3 },
-      lastUpdate: {
-        label: "You edited this",
-        icon: <EditRegular />,
-      },
+  label: string;
+  icon: JSX.Element;
+};
+
+type AuthorCell = {
+  label: string;
+};
+
+type Item = {
+  file: FileCell;
+  author: AuthorCell;
+};
+
+const items: Item[] = [
+  {
+    file: { label: "AIM Capial Market Update", 
+    icon: <MailLinkRegular primaryFill="blue"/> },
+    author: { label: "Max Mustermann" },
+  },
+  {
+    file: {
+      label: "European Central Bank Article",
+      icon: <DocumentPdfRegular  primaryFill="red"/>,
     },
-    {
-      file: { label: "Thursday presentation", icon: <FolderRegular /> },
-      author: { label: "Erika Mustermann", status: "busy" },
-      lastUpdated: { label: "Yesterday at 1:45 PM", timestamp: 2 },
-      lastUpdate: {
-        label: "You recently opened this",
-        icon: <OpenRegular />,
-      },
-    },
-    {
-      file: { label: "Training recording", icon: <VideoRegular /> },
-      author: { label: "John Doe", status: "away" },
-      lastUpdated: { label: "Yesterday at 1:45 PM", timestamp: 2 },
-      lastUpdate: {
-        label: "You recently opened this",
-        icon: <OpenRegular />,
-      },
-    },
-    {
-      file: { label: "Purchase order", icon: <DocumentPdfRegular /> },
-      author: { label: "Jane Doe", status: "offline" },
-      lastUpdated: { label: "Tue at 9:30 AM", timestamp: 1 },
-      lastUpdate: {
-        label: "You shared this in a Teams chat",
-        icon: <PeopleRegular />,
-      },
-    },
-  ];
-  
-  const columns: TableColumnDefinition<Item>[] = [
-    createTableColumn<Item>({
-      columnId: "file",
-    }),
-    createTableColumn<Item>({
-      columnId: "author",
-    }),
-    createTableColumn<Item>({
-      columnId: "lastUpdated",
-    }),
-    createTableColumn<Item>({
-      columnId: "lastUpdate",
-    }),
-  ];
+    author: { label: "Erika Mustermann" },
+  },
+  {
+    file: { label: "Morning News Call - Europe", 
+    icon: <MailLinkRegular primaryFill="blue"/> },
+    author: { label: "Daisy Phillips" },
+  },
+  {
+    file: { label: "Early Morning Reid", 
+    icon: <DocumentPdfRegular primaryFill="red"/> },
+    author: { label: "Kat Larrson" },
+  },
+];
+
+const columns: TableColumnDefinition<Item>[] = [
+  createTableColumn<Item>({
+    columnId: "file",
+  }),
+  createTableColumn<Item>({
+    columnId: "author",
+  }),
+  createTableColumn<Item>({
+    columnId: "lastUpdated",
+  }),
+  createTableColumn<Item>({
+    columnId: "lastUpdate",
+  }),
+];
 
 const DocumentsGrid = () => {
   const {
@@ -168,10 +145,8 @@ const DocumentsGrid = () => {
             checkboxIndicator={{ "aria-label": "Select all rows " }}
           />
 
-          <TableHeaderCell>File</TableHeaderCell>
+          <TableHeaderCell>Name</TableHeaderCell>
           <TableHeaderCell>Author</TableHeaderCell>
-          <TableHeaderCell>Last updated</TableHeaderCell>
-          <TableHeaderCell>Last update</TableHeaderCell>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -194,20 +169,9 @@ const DocumentsGrid = () => {
             </TableCell>
             <TableCell>
               <TableCellLayout
-                media={
-                  <Avatar
-                    aria-label={item.author.label}
-                    badge={{ status: item.author.status }}
-                  />
-                }
+                media={<Avatar aria-label={item.author.label} />}
               >
                 {item.author.label}
-              </TableCellLayout>
-            </TableCell>
-            <TableCell>{item.lastUpdated.label}</TableCell>
-            <TableCell>
-              <TableCellLayout media={item.lastUpdate.icon}>
-                {item.lastUpdate.label}
               </TableCellLayout>
             </TableCell>
           </TableRow>
@@ -215,6 +179,6 @@ const DocumentsGrid = () => {
       </TableBody>
     </Table>
   );
-}
+};
 
 export default DocumentsGrid;

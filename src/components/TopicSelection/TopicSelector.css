@@ -1,0 +1,71 @@
+.TopicSelectionDiv {
+  display: grid; 
+  grid-auto-columns: 1fr; 
+  grid-template-columns: 0.1fr 2.9fr 0.1fr; 
+  grid-template-rows: 1fr 1.5fr 1fr 0.5fr  1fr ; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    ". TopicHeaderDiv ."
+    ". TopicTemplateDiv ."
+    ". HotTopicsDiv ."
+    ". TagsDiv ."
+    ". ButtonDiv .";
+    border: 2px solid gray;
+  }
+.TopicHeaderDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: TopicHeaderDiv; 
+}
+.TopicTemplateDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: TopicTemplateDiv; 
+}
+.HotTopicsDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: HotTopicsDiv; 
+}
+.TagsDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: TagsDiv; 
+}
+.ButtonDiv {
+  justify-self: center; 
+  align-self: center; 
+  grid-area: ButtonDiv; 
+}
+
+.templateCon {
+  display: flex;
+}
+
+.templateCon > div {
+  flex: 1;
+  margin-right: 5px;
+}
+
+.templateCon > div:last-child {
+  margin-right: 0;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 200px; 
+}
+.card-heading {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}  
