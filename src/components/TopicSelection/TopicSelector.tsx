@@ -68,7 +68,7 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
       <div className="TopicTemplateDiv">
         <div className="templateCon">
           <TopicTemplate
-            heading="Test template 2"
+            heading="Global Market"
             color="#4B0082"
             onClick = {onOpen}
           ></TopicTemplate>

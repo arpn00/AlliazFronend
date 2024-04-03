@@ -10,7 +10,7 @@
       "SubHeadingDiv"
       "."
       "StepperDiv"; 
-    grid-area: ProgressGrid; 
+    /* grid-area: ProgressGrid;  */
   }
   .HeaderDiv {
     justify-self: center; 

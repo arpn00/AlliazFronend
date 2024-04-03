@@ -66,8 +66,9 @@
   grid-area: 3 / 1 / 4 / 2; 
 }
 
-.Body { grid-area: Body; }
+/* .Body { grid-area: Body; }
 
+.NewsLetterBody { grid-area: NewsLetterBody; } */
 
 #root
 {

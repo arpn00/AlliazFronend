@@ -1,17 +1,24 @@
-import React from "react";
+import  React ,{useEffect , useState } from "react";
+import { FC } from "react";
 import logo from "../../assets/AllianzLogo.png";
 import { Text } from "@fluentui/react-components";
 import { Outlet } from "react-router-dom";
-import "./Layout.css";
 import { Home28Filled, History28Regular } from "@fluentui/react-icons";
 import IconButton from "@mui/material/IconButton";
 import MenuPersona from "../../components/Persona/MenuPersona.tsx";
 import {
   FluentProvider,
   webLightTheme,
-  Button
 } from "@fluentui/react-components";
-const Layout = () => {
+
+interface LayoutProps {
+
+}
+
+
+const Layout : FC<LayoutProps> = (props) => {
+
+  // get step and lazy load layout.css only if step  >=2
   return (
     <FluentProvider theme={webLightTheme} style={{ height: 'inherit' }}>
     <div id="root">
@@ -39,13 +46,9 @@ const Layout = () => {
         <div className="NavBottom">
           <div className="Persona">
             <MenuPersona></MenuPersona>
-            {/* <img src={persona} alt="persona" /> */}
           </div>
         </div>
         <Outlet></Outlet>
-
-        {/* <div className="Body">
-        </div> */}
       </div>
     </div>
     </FluentProvider>
