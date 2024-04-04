@@ -10,7 +10,10 @@
     ". HotTopicsDiv ."
     ". TagsDiv ."
     ". ButtonDiv .";
-    border: 2px solid gray;
+    border-radius: 8px;
+border: 2px solid #EDEDED;
+background: #FFF;
+backdrop-filter: blur(10px);
   }
 .TopicHeaderDiv {
   justify-self: center; 

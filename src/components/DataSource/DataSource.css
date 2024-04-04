@@ -13,7 +13,13 @@
     ". ContinueButtonDiv ."
     ". . ."; 
   grid-area: DataSourceDiv; 
-  border: 2px solid gray;
+  border-radius: 8px;
+
+  border: 2px solid #EDEDED;
+  
+  background: #FFF;
+  
+  backdrop-filter: blur(10px);
 }
 .SourceDiv {
   justify-self: center; 

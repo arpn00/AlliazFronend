@@ -32,19 +32,9 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-
-  externalIdent: string | undefined;
-  externalIdentType: string | undefined;
-  evalCode: string | undefined;
-  mdValue: string | undefined;
-
 }
 
 const Chat = ({
-  externalIdent,
-  externalIdentType,
-  evalCode,
-  mdValue,
 }: Props) => {
 
   const lastQuestionRef = useRef<string>("");
@@ -95,7 +85,9 @@ const Chat = ({
               followup_questions: null,
               thoughts: [],
             }, session_state: null, message: {
-              content: `I apologize, but the available sources do not contain information related to your query. Please consider rephrasing your question`, role: "assistant"
+content: `<b>EM debt also performed well.</b> Hard currency sovereigns returned 0.8%, EM Corporates 0.4% and local currency sovereigns were flat. The positive returns were rates driven, whilst spreads widened for both sovereign and corporates debt. Meanwhile, the momentum in EM bond flows remains weak, with outflows concentrated in EM credit funds. The picture remains more upbeat in the EM equity space, where inflows resumed, driven by flows into Asia-focused funds. But the main focus last week was on Egypt, which holds a ~2% weight in hard currency mandates. On Wednesday, the central bank surprised the market with decision to hike rates by 600bps and let the currency float. The shift towards a free-floating exchange rate was critical to get the current IMF program back on track. Overall, the combination of the $8bn IMF deal, a USD 35bn UAE-Egypt foreign direct investment deal and upcoming inflows from other multilateral institutions will help address the FX shortages. The latter, along with an aggressive cumulative tightening of 800bps, is expected to fast-track Egypt's disinflation process. After some debt sustainability concerns last summer, the sovereign debt rallied ca. 45% over the last six months.`, role: "assistant"
+
+              // content: `I apologize, but the available sources do not contain information related to your query. Please consider rephrasing your question`, role: "assistant"
             }
           }]
         };
@@ -208,15 +200,14 @@ const Chat = ({
           followup_questions: null,
           thoughts: [],
         }, session_state: null, message: {
-          content: `Starting your copilot as per following input <br> <ul><li>External Ident : <strong>${externalIdent}</strong></li><li>External Ident Type : <strong>${externalIdentType}</strong></li><li>Eval Code : <strong>${evalCode}</strong></li><li>MD Value : <strong>${mdValue}</strong></li></ul>This Investemnt is <span style="
-    color: red;">Risk Sensitive</span>. Please review the documents available as per our records`, role: "assistant"
+          content: `Use the copilot to create new content`, role: "assistant"
         }
       }]
 
     } as ChatAppResponse;
 
     response.push(askResponse);
-    response.push(getInitiateAnalysisPrompt());
+    // response.push(getInitiateAnalysisPrompt());
     setwelcomePromptAnswer(response);
     setAnswers(response.map(x => ["", x]));
   }
@@ -247,22 +238,6 @@ const Chat = ({
   return (
     <div className={styles.container}>
       <div className={styles.chatRoot}>
-        <Stack enableScopedSelectors horizontal>
-          <Stack.Item style={SideBarStyles}>
-            <Stack enableScopedSelectors style={{ margin: "10px", backgroundColor: "white", marginTop: "25px" }}>
-              <Stack.Item align="center">
-                <div className={styless.innerWrapper}>
-                  <CompoundButton
-                    icon={<AddCircle32Regular />}
-                  >
-                    New Query
-                  </CompoundButton>
-
-                </div>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
-        </Stack>
 
         <div className={styles.chatContainer}>
           <div className={styles.chatMessageStream}>
@@ -321,7 +296,7 @@ const Chat = ({
           <div className={styles.chatInput}>
             <QuestionInput
               clearOnSend
-              placeholder="Ask me anything about SPPI..."
+              placeholder="Ask me anything about Market Research ..."
               disabled={isLoading}
               onSend={question => makeApiRequest(question)
               }

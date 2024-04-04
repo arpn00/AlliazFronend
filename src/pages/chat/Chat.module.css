@@ -75,7 +75,7 @@
 }
 
 .chatInput {
-    position: sticky;
+    /* position: sticky; */
     bottom: 0;
     flex: 0 0 100px;
     padding-top: 12px;
