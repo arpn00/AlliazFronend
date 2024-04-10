@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  TableRowId,
   Table,
   TableHeader,
   TableHeaderCell,
@@ -24,11 +25,10 @@ import {
   useTableSelection,
   createTableColumn,
 } from "@fluentui/react-components";
+import { FC } from "react";
+import { DocumentsResponse } from "../../api/models.ts";
+import {DocumentIcon} from "./DocumentIcon.tsx"
 
-import {
-  DocumentPdf24Filled,
-  MailLink24Filled,
-} from "@fluentui/react-icons";
 type FileCell = {
   label: string;
   icon: JSX.Element;
@@ -43,47 +43,32 @@ type Item = {
   author: AuthorCell;
 };
 
-const items: Item[] = [
-  {
-    file: { label: "AIM Capial Market Update", 
-    icon: <MailLinkRegular primaryFill="blue"/> },
-    author: { label: "Max Mustermann" },
-  },
-  {
-    file: {
-      label: "European Central Bank Article",
-      icon: <DocumentPdfRegular  primaryFill="red"/>,
-    },
-    author: { label: "Erika Mustermann" },
-  },
-  {
-    file: { label: "Morning News Call - Europe", 
-    icon: <MailLinkRegular primaryFill="blue"/> },
-    author: { label: "Daisy Phillips" },
-  },
-  {
-    file: { label: "Early Morning Reid", 
-    icon: <DocumentPdfRegular primaryFill="red"/> },
-    author: { label: "Kat Larrson" },
-  },
-];
-
 const columns: TableColumnDefinition<Item>[] = [
   createTableColumn<Item>({
     columnId: "file",
   }),
   createTableColumn<Item>({
     columnId: "author",
-  }),
-  createTableColumn<Item>({
-    columnId: "lastUpdated",
-  }),
-  createTableColumn<Item>({
-    columnId: "lastUpdate",
-  }),
+  })
 ];
 
-const DocumentsGrid = () => {
+interface DocumentsGridProps {
+  documents: DocumentsResponse[];
+}
+
+const DocumentsGrid: FC<DocumentsGridProps> = (props) => {
+  const { documents } = props;
+  const items: Item[] = documents.map((doc) => ({
+    file: {
+      label: !!doc.name ? doc.name?.split('.').slice(0, -1).join('.') : '',
+      icon: !!doc.name? <DocumentIcon fileName= {doc.name.toLowerCase()}></DocumentIcon> :<DocumentRegular/>,
+    },
+    author: { label: "Max Mustermann" },
+  }));
+
+  const [selectedRows, setSelectedRows] = React.useState(
+    () => new Set<TableRowId>([0, 1])
+  );
   const {
     getRows,
     selection: {
@@ -101,7 +86,10 @@ const DocumentsGrid = () => {
     [
       useTableSelection({
         selectionMode: "multiselect",
-        defaultSelectedItems: new Set([0, 1]),
+        onSelectionChange: (e, data) => {
+          console.log("I am here");
+          setSelectedRows(data.selectedItems);
+        },
       }),
     ]
   );

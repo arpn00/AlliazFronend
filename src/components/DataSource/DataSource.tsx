@@ -1,26 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./DataSource.css";
 import { Text, Checkbox, Button, Input } from "@fluentui/react-components";
 import DateRange from "../DateRange.tsx";
-import {
-  CloudAdd24Filled,
-  Next16Filled,
-} from "@fluentui/react-icons";
+import { CloudAdd24Filled, Next16Filled } from "@fluentui/react-icons";
 import { CommonDialog } from "../Dialog/CommonDialog.tsx";
 import DocumentSelector from "../DocumentSelector/DocumentSelector.tsx";
-
+import { DateRangeType } from "@fluentui/react-calendar-compat";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
+import { getDocuments } from "../../api/api.ts";
 import { FC, useState } from "react";
+import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
 
 interface DataSourceProps {
-  onContinue : () => void;
-  }
+  onContinue: () => void;
+}
 
-const DataSource : FC<DataSourceProps> = (props) => {
+const DataSource: FC<DataSourceProps> = (props) => {
   const { onContinue } = props;
 
   const [showDocumentDialog, setshowDocumentDialog] = useState<boolean>(false);
+  const [selectedStartDate, setSelectedStartDate] = useState<
+    Date | null | undefined
+  >(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<
+    Date | null | undefined
+  >(null);
+  const [documentsFromSource, setDocumentsFromSource] = useState<
+    DocumentsResponse[]
+  >([]);
   const onClose = () => {
     setshowDocumentDialog(false);
+  };
+  useEffect(() => {
+    Getdocuments();
+  }, []);
+  const Getdocuments = () => {
+    getDocuments()
+      .then(() => {
+        const documentsResponses: DocumentsResponse[] = [
+          { link: "example-link-1", name: "AIM Capial Market Update.eml" },
+          { link: "example-link-2", name: "European Central Bank Article.pdf" },
+          { link: "example-link-2", name: "Morning News Call - Europe.eml" },
+          { link: "example-link-2", name: "Early Morning Reid.pdf" },
+        ];
+        setDocumentsFromSource(documentsResponses);
+      })
+      .catch((error) => {});
   };
 
   const onOpen = () => {
@@ -42,8 +67,24 @@ const DataSource : FC<DataSourceProps> = (props) => {
         </Text>
       </div>
       <div className="TimeFrameSelectorDiv">
-        <DateRange placeholder="Select Start Date"></DateRange>
-        <DateRange placeholder="Select End Date"></DateRange>
+        <DatePicker
+          onSelectDate={setSelectedStartDate}
+          style={{ width: "150px", margin: "5px" }}
+          calendar={{
+            dateRangeType: DateRangeType.Day,
+          }}
+          placeholder="Select Start Date"
+        />
+        <DatePicker
+          onSelectDate={setSelectedEndDate}
+          minDate={selectedStartDate!}
+          disabled={!!!selectedStartDate}
+          style={{ width: "150px", margin: "5px" }}
+          calendar={{
+            dateRangeType: DateRangeType.Day,
+          }}
+          placeholder="Select End Date"
+        />
       </div>
       <div className="DocumentsHeaderDiv">
         <Text size={500} weight="semibold">
@@ -76,7 +117,7 @@ const DataSource : FC<DataSourceProps> = (props) => {
         maxWidth={1200}
         onSecondaryAction={onClose}
       >
-        <DocumentSelector></DocumentSelector>
+        <DocumentSelector documents={documentsFromSource}></DocumentSelector>
       </CommonDialog>
     </div>
   );

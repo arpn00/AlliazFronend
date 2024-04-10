@@ -7,8 +7,39 @@ import {
   Filter24Filled,
 } from "@fluentui/react-icons";
 import DocumentsGrid from "../DocumentSelector/DocumentsGrid.tsx";
+import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
+import { FC, useState, useMemo } from "react";
 
-const DocumentSelector = () => {
+interface DocumentSelectorProps {
+  documents: DocumentsResponse[];
+}
+
+const DocumentSelector: FC<DocumentSelectorProps> = (props) => {
+  const { documents } = props;
+  const [filterSelected, setFilterSelected] = useState<string>("All");
+  const [filterText, setFilterText] = useState("");
+
+  const filteredDocuments = useMemo(() => {
+    let filteredDoc = documents;
+
+    if (filterSelected != "All") {
+      filteredDoc = filteredDoc.filter(
+        (doc) => doc.name?.split(".").pop() === filterSelected
+      );
+    }
+
+    if (filterText.trim() !== "") {
+      filteredDoc = filteredDoc.filter((doc) =>
+        doc.name.toLowerCase().includes(filterText.toLowerCase())
+      );
+    }
+
+    return filteredDoc;
+  }, [documents, filterSelected, filterText]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterText(event.target.value);
+  };
   return (
     <>
       <div className="DocContainer">
@@ -19,7 +50,9 @@ const DocumentSelector = () => {
             </Text>
           </div>
           <div className="AllSelectionDiv">
-            <Button shape="circular">All</Button>
+            <Button shape="circular" onClick={() => setFilterSelected("All")}>
+              All
+            </Button>
           </div>
           <div className="PdfSelectionDiv">
             <Button
@@ -28,6 +61,7 @@ const DocumentSelector = () => {
                 <DocumentPdf24Filled primaryFill="#FF0000"></DocumentPdf24Filled>
               }
               iconPosition="before"
+              onClick={() => setFilterSelected("pdf")}
             >
               PDF
             </Button>
@@ -37,6 +71,7 @@ const DocumentSelector = () => {
               shape="circular"
               icon={<MailLink24Filled primaryFill="blue"></MailLink24Filled>}
               iconPosition="before"
+              onClick={() => setFilterSelected("eml")}
             >
               Eml
             </Button>
@@ -45,11 +80,12 @@ const DocumentSelector = () => {
             <Input
               contentBefore={<Filter24Filled />}
               placeholder="Filter by name or keyword"
+              onChange={handleInputChange}
             />
           </div>
         </div>
         <div className="DocTableGrid">
-          <DocumentsGrid></DocumentsGrid>
+          <DocumentsGrid documents={filteredDocuments}></DocumentsGrid>
         </div>
       </div>
     </>

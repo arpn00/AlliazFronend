@@ -1,10 +1,7 @@
+import {DocumentsResponseBody,DocumentsResponse} from"./models.ts"
+
 export function getCitationFilePath(citation: string): string {
     return `https://stovuktdn5g4hvs.blob.core.windows.net/content/${citation}`;
-}
-
-
-export function getCitationForSelectedTask(): string[] {
-    return ["employee_handbook.pdf","Financial Market Analysis Report 2023.pdf"];
 }
 
 export function getAnalysisQuestion(): string {
@@ -18,3 +15,7 @@ export function getAllAnalysisQuestion(): string[] {
     ];
 }
 
+
+export async function getDocuments(): Promise<any> {
+   return true;
+}

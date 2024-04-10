@@ -87,3 +87,12 @@ export type ButtonsType ={
     text:string,
     key:string
 }
+
+export type DocumentsResponseBody = {
+    data: DocumentsResponse[];
+};
+
+export type DocumentsResponse = {
+    link: string;
+    name: string;
+};
