@@ -9,13 +9,18 @@ import {
 import DocumentsGrid from "../DocumentSelector/DocumentsGrid.tsx";
 import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
 import { FC, useState, useMemo } from "react";
+import {
+  TableRowId,
+} from "@fluentui/react-components";
 
 interface DocumentSelectorProps {
   documents: DocumentsResponse[];
+  selectedRows: Set<TableRowId>;
+  setSelectedRows: React.Dispatch<React.SetStateAction<Set<TableRowId>>>;
 }
 
 const DocumentSelector: FC<DocumentSelectorProps> = (props) => {
-  const { documents } = props;
+  const { documents, selectedRows, setSelectedRows } = props;
   const [filterSelected, setFilterSelected] = useState<string>("All");
   const [filterText, setFilterText] = useState("");
 
@@ -46,7 +51,7 @@ const DocumentSelector: FC<DocumentSelectorProps> = (props) => {
         <div className="TopNavGrid">
           <div className="DocHeaderDiv">
             <Text size={500} weight="semibold">
-              Recent
+              Recent ({selectedRows})
             </Text>
           </div>
           <div className="AllSelectionDiv">
@@ -85,7 +90,7 @@ const DocumentSelector: FC<DocumentSelectorProps> = (props) => {
           </div>
         </div>
         <div className="DocTableGrid">
-          <DocumentsGrid documents={filteredDocuments}></DocumentsGrid>
+          <DocumentsGrid documents={filteredDocuments} selectedRows={selectedRows} setSelectedRows={setSelectedRows}></DocumentsGrid>
         </div>
       </div>
     </>

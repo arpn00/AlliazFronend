@@ -50,6 +50,12 @@
   justify-self: center; 
   align-self: start; 
   grid-area: DocumentsSelectorDiv; 
+  display: flex;
+  flex-direction: row; /* To lay out items horizontally */
+}
+.DocumentsSelectorSubDiv {
+  flex: 1; /* Each column takes equal space */
+  padding: 10px; /* Adjust padding as needed */
 }
 .ContinueButtonDiv {
   justify-self: center; 

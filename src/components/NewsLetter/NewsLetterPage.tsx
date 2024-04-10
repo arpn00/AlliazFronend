@@ -8,12 +8,22 @@ import {
   Share28Filled,
   CalendarDataBar24Filled,
 } from "@fluentui/react-icons";
-import SelectedDocumentsGrid from "../DocumentSelector/SelectedDocumentsGrid.tsx"
+import SelectedDocumentsGrid from "../DocumentSelector/SelectedDocumentsGrid.tsx";
 import { CommonDialog } from "../Dialog/CommonDialog.tsx";
 
 import Chat from "../../pages/chat/Chat.tsx";
-const NewsLetterPage = () => {
+import { DocumentsResponse } from "../../api/models.ts";
+
+interface NewsLetterPageProps {
+  documents: DocumentsResponse[];
+  startDate: Date;
+  endDate: Date;
+}
+
+const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
+  const { documents, startDate, endDate } = props;
   const [showDocumentDialog, setShowDocumentDialog] = useState<boolean>(false);
+  const dateRange = `${startDate.toDateString()} - ${endDate.toDateString()}`;
   const onClose = () => {
     setShowDocumentDialog(false);
   };
@@ -36,14 +46,14 @@ const NewsLetterPage = () => {
           </div>
           <div className="NewsletterHeader2">
             <Text size={400} weight="semibold" color="#003781">
-              EIKON
+              REFINITIV
             </Text>
           </div>
           <div className="NewsletterHeader3">
             <Input
               contentBefore={<CalendarDate24Regular primaryFill="blue" />}
               disabled
-              placeholder="02-Jan to 15-Jan"
+              placeholder={dateRange}
               style={{ minWidth: "300px", maxWidth: "400px" }}
             />
           </div>
@@ -71,11 +81,19 @@ const NewsLetterPage = () => {
                 appearance="filled"
                 color="brand"
                 style={{ marginRight: "10px" }}
-                onClick={() =>{setShowDocumentDialog(true); }}
+                onClick={() => {
+                  setShowDocumentDialog(true);
+                }}
               >
-                3
+                {documents.length ?? 0}
               </Badge>
-              <Link onClick={() =>{setShowDocumentDialog(true)}}>Documents selected</Link>
+              <Link
+                onClick={() => {
+                  setShowDocumentDialog(true);
+                }}
+              >
+                Documents selected
+              </Link>
             </div>
           </div>
           <div className="NewsletterHeader6">
@@ -119,7 +137,9 @@ const NewsLetterPage = () => {
                   iconPosition="before"
                   appearance="transparent"
                   icon={<CalendarDataBar24Filled />}
-                  onClick={() =>{setShowDocumentDialog(true)}}
+                  onClick={() => {
+                    setShowDocumentDialog(true);
+                  }}
                 >
                   Show all sources
                 </Button>
@@ -142,7 +162,7 @@ const NewsLetterPage = () => {
         maxWidth={600}
         onSecondaryAction={onClose}
       >
-        <SelectedDocumentsGrid></SelectedDocumentsGrid>
+        <SelectedDocumentsGrid documents={documents}></SelectedDocumentsGrid>
       </CommonDialog>
     </div>
   );

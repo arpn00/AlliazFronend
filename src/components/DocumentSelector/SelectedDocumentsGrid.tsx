@@ -1,96 +1,90 @@
 import * as React from "react";
+import { DocumentRegular } from "@fluentui/react-icons";
 import {
-  FolderRegular,
-  EditRegular,
-  OpenRegular,
-  DocumentRegular,
-  PeopleRegular,
-  DocumentPdfRegular,
-  MailLinkRegular,
-  VideoRegular,
-} from "@fluentui/react-icons";
-import {
-  Avatar,
   TableBody,
   TableCell,
   TableRow,
   Table,
   TableHeader,
   TableHeaderCell,
-  TableSelectionCell,
   TableCellLayout,
-  useTableFeatures,
-  TableColumnDefinition,
-  useTableSelection,
-  createTableColumn,
 } from "@fluentui/react-components";
 
-import {
-  DocumentPdf24Filled,
-  MailLink24Filled,
-} from "@fluentui/react-icons";
+import { DocumentsResponse } from "../../api/models.ts";
+import { DocumentIcon } from "./DocumentIcon.tsx";
+import { FC } from "react";
 
 type FileCell = {
   label: string;
   icon: JSX.Element;
 };
 
-
-
 type Item = {
   file: FileCell;
 };
 
-const items: Item[] = [
-  {
-    file: { label: "AIM Capial Market Update", 
-    icon: <MailLinkRegular primaryFill="blue"/> },
-  },
-  {
+// const items: Item[] = [
+//   {
+//     file: { label: "AIM Capial Market Update",
+//     icon: <MailLinkRegular primaryFill="blue"/> },
+//   },
+//   {
+//     file: {
+//       label: "European Central Bank Article",
+//       icon: <DocumentPdfRegular  primaryFill="red"/>,
+//     },
+//   },
+//   {
+//     file: { label: "Morning News Call - Europe",
+//     icon: <MailLinkRegular primaryFill="blue"/> },
+//   },
+//   {
+//     file: { label: "Early Morning Reid",
+//     icon: <DocumentPdfRegular primaryFill="red"/> },
+//   },
+// ];
+
+const columns = [{ columnKey: "file", label: "File" }];
+
+interface SelectedDocumentsGridProps {
+  documents: DocumentsResponse[];
+}
+const SelectedDocumentsGrid: FC<SelectedDocumentsGridProps> = (props) => {
+  const { documents } = props;
+  const items: Item[] = documents.map((doc) => ({
     file: {
-      label: "European Central Bank Article",
-      icon: <DocumentPdfRegular  primaryFill="red"/>,
+      label: !!doc.name ? doc.name?.split(".").slice(0, -1).join(".") : "",
+      icon: !!doc.name ? (
+        <DocumentIcon fileName={doc.name.toLowerCase()}></DocumentIcon>
+      ) : (
+        <DocumentRegular />
+      ),
     },
-  },
-  {
-    file: { label: "Morning News Call - Europe", 
-    icon: <MailLinkRegular primaryFill="blue"/> },
-  },
-  {
-    file: { label: "Early Morning Reid", 
-    icon: <DocumentPdfRegular primaryFill="red"/> },
-  },
-];
-
-const columns = [
-    { columnKey: "file", label: "File" },
-  ];
-
-const SelectedDocumentsGrid = () => {
-  
-    return (
-        <Table arial-label="Selected Documents">
-          <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
-                <TableHeaderCell key={column.columnKey}>
-                  {column.label}
-                </TableHeaderCell>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.file.label}>
-                <TableCell>
-                  <TableCellLayout media={item.file.icon}>
-                    {item.file.label}
-                  </TableCellLayout>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    author: { label: "Max Mustermann" },
+  }));
+  return (
+    <Table arial-label="Selected Documents">
+      <TableHeader>
+        <TableRow>
+          {columns.map((column) => (
+            <TableHeaderCell key={column.columnKey}>
+              {column.label}
+            </TableHeaderCell>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.map((item) => (
+          <TableRow key={item.file.label}>
+            <TableCell>
+              <TableCellLayout media={item.file.icon}>
+                {item.file.label}
+              </TableCellLayout>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 

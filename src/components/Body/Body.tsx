@@ -1,39 +1,40 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Body.css";
 import SourcesTemplate from "../../components/PageTemplates/SourcesTemplate.tsx";
 import DataSource from "../../components/DataSource/DataSource.tsx";
 import { FC } from "react";
 import TopicSelector from "../TopicSelection/TopicSelector.tsx";
 import SpinnerLogo from "../Spinner/Spinner.tsx";
-import NewsLetterPage from "../NewsLetter/NewsLetterPage.tsx"
-interface BodyProps {
+import NewsLetterPage from "../NewsLetter/NewsLetterPage.tsx";
+import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
 
-}
+interface BodyProps {}
 
 const Body: FC<BodyProps> = (props) => {
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [selectedStartDate, setSelectedStartDate] = useState<
+    Date | null | undefined
+  >(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<
+    Date | null | undefined
+  >(null);
+  const [selectedDocuments, setSelectedDocuments] = useState<
+    DocumentsResponse[]
+  >([]);
 
   const onContinue = () => {
-    if(currentStep ==1)
-    {
+    if (currentStep == 1) {
       setCurrentStep(currentStep + 2);
-    }
-    else
-    {
+    } else {
       setCurrentStep(currentStep + 1);
-
     }
   };
 
   useEffect(() => {
     if (currentStep != 3) {
-      // Load Layout.css dynamically
-      import("../../pages/layout/Layout.css")
-    }
-    else
-    {
-      import("../NewsLetter/NewsLetterPage.css")
-
+      import("../../pages/layout/Layout.css");
+    } else {
+      import("../NewsLetter/NewsLetterPage.css");
     }
   }, [currentStep]);
   return (
@@ -50,7 +51,15 @@ const Body: FC<BodyProps> = (props) => {
             ></SourcesTemplate>
           ) : null}
           {currentStep === 0 ? (
-            <DataSource onContinue={onContinue}></DataSource>
+            <DataSource
+              selectedStartDate={selectedStartDate}
+              setSelectedStartDate={setSelectedStartDate}
+              selectedEndDate={selectedEndDate}
+              setSelectedEndDate={setSelectedEndDate}
+              selectedDocuments={selectedDocuments}
+              setSelectedDocuments={setSelectedDocuments}
+              onContinue={onContinue}
+            ></DataSource>
           ) : null}
           {currentStep === 1 ? (
             <SourcesTemplate
@@ -71,7 +80,7 @@ const Body: FC<BodyProps> = (props) => {
           <div className="FooterGrid"></div>
         </div>
       ) : (
-        <NewsLetterPage></NewsLetterPage>
+        <NewsLetterPage documents={selectedDocuments} startDate={selectedStartDate!} endDate={selectedEndDate!}></NewsLetterPage>
       )}
     </>
   );

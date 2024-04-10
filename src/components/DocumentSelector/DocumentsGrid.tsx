@@ -54,10 +54,13 @@ const columns: TableColumnDefinition<Item>[] = [
 
 interface DocumentsGridProps {
   documents: DocumentsResponse[];
+  selectedRows: Set<TableRowId>;
+  setSelectedRows: React.Dispatch<React.SetStateAction<Set<TableRowId>>>;
 }
 
 const DocumentsGrid: FC<DocumentsGridProps> = (props) => {
-  const { documents } = props;
+  const { documents, selectedRows, setSelectedRows } = props;
+  
   const items: Item[] = documents.map((doc) => ({
     file: {
       label: !!doc.name ? doc.name?.split('.').slice(0, -1).join('.') : '',
@@ -66,9 +69,9 @@ const DocumentsGrid: FC<DocumentsGridProps> = (props) => {
     author: { label: "Max Mustermann" },
   }));
 
-  const [selectedRows, setSelectedRows] = React.useState(
-    () => new Set<TableRowId>([0, 1])
-  );
+  // const [selectedRows, setSelectedRows] = React.useState(
+  //   () => new Set<TableRowId>([0, 1])
+  // );
   const {
     getRows,
     selection: {
@@ -86,8 +89,8 @@ const DocumentsGrid: FC<DocumentsGridProps> = (props) => {
     [
       useTableSelection({
         selectionMode: "multiselect",
+        selectedItems:selectedRows,
         onSelectionChange: (e, data) => {
-          console.log("I am here");
           setSelectedRows(data.selectedItems);
         },
       }),
