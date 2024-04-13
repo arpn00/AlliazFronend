@@ -96,3 +96,10 @@ export type DocumentsResponse = {
     link: string;
     name: string;
 };
+
+export type QuestionnaireResponse = {
+    search_texts : string[];
+    important_note : string;
+    title : string;
+    filter : string
+}

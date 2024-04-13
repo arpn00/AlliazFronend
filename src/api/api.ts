@@ -1,4 +1,4 @@
-import {DocumentsResponseBody,DocumentsResponse} from"./models.ts"
+import { DocumentsResponseBody, DocumentsResponse } from "./models.ts"
 
 export function getCitationFilePath(citation: string): string {
     return `https://stovuktdn5g4hvs.blob.core.windows.net/content/${citation}`;
@@ -17,5 +17,18 @@ export function getAllAnalysisQuestion(): string[] {
 
 
 export async function getDocuments(): Promise<any> {
-   return true;
+    return true;
+}
+
+
+export async function getQuestionnaire(): Promise<any> {
+    try {
+        const response = await fetch(`questionnaire/get`, {
+            method: "GET"
+        });
+        return await response.json();
+    }
+    catch {
+        return [];
+    }
 }

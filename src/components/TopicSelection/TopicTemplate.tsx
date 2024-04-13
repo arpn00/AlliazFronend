@@ -20,11 +20,11 @@ export const TopicTemplate: FC<TopicTemplateProps> = ({
       <div className="card-heading">{heading}</div>
       <div className="icon">
         {newTemplate ? (
-          <IconButton onClick={onClick}>
+          <IconButton onClick={onClick} disabled>
             <Add24Filled primaryFill={color} ></Add24Filled>
           </IconButton>
         ) : (
-          <IconButton onClick={onClick}>
+          <IconButton onClick={onClick} >
             <Edit24Filled primaryFill={color}></Edit24Filled>
           </IconButton>
         )}
