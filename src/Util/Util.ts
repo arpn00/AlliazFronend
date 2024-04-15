@@ -1,4 +1,4 @@
-import { QuestionnaireResponse } from "../api/models.ts";
+import { QuestionnaireResponse,NewsLetterRequest } from "../api/models.ts";
 import {
     HeadlessFlatTreeItemProps,
 } from "@fluentui/react-components";
@@ -35,4 +35,18 @@ export function RemoveLastCharacterOccurance(
       return text.slice(0, lastIndex) + text.slice(lastIndex + 1);
     }
     return text;
+}
+
+export function createResponseBodyForNewsLetter(
+    questionType: string,
+    importantNote: string,
+    searchText?: string | undefined): NewsLetterRequest {
+
+    let request: NewsLetterRequest = {
+        important_note: importantNote,
+        search_text: searchText === undefined ? "" : searchText,
+        question_type: questionType
+    };
+
+    return request;
 }

@@ -103,3 +103,13 @@ export type QuestionnaireResponse = {
     title : string;
     filter : string
 }
+
+export type NewsLetterRequest = {
+    important_note: string;
+    search_text: string;
+    question_type: string;
+};
+
+export type NewsLetterResponse = {
+    answer: string;
+};

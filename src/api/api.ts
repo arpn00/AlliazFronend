@@ -1,4 +1,4 @@
-import { DocumentsResponseBody, DocumentsResponse } from "./models.ts"
+import { DocumentsResponseBody, DocumentsResponse,NewsLetterRequest,NewsLetterResponse } from "./models.ts"
 
 export function getCitationFilePath(citation: string): string {
     return `https://stovuktdn5g4hvs.blob.core.windows.net/content/${citation}`;
@@ -31,4 +31,12 @@ export async function getQuestionnaire(): Promise<any> {
     catch {
         return [];
     }
+}
+
+export async function createDraft(request: NewsLetterRequest, idToken: string | undefined): Promise<NewsLetterResponse> {
+    const dummyResponse: NewsLetterResponse = {
+        answer: "This is a dummy answer."
+    };
+
+    return dummyResponse;
 }

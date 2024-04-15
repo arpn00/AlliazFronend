@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, ContentState, convertFromHTML, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { FC } from "react";
 
-const MyRichTextEditor = () => {
+interface MyRichTextEditorProps {
+
+  draft : string
+}
+
+const MyRichTextEditor: FC<MyRichTextEditorProps> = (props) => {
+  const { draft } = props;
+
   const dummyData = `
   <h1>Bloomberg Market Research Report</h1>
   <p><b>Another week, another step closer to the first rate cut although the disinflation path remains bumpy.</b> With Jeremy Powell stating that interest rates cuts would be appropriate “at some point this year” and Christine Laggard referring to “dialling back monetary restrictions”, markets have priced a near certain first cut in June – as we expect, subject to further data releases until June. Whether the FED or the ECB will cut first remains less clear. Risky assets responded positively to the pending rate cuts, with equities mildly up, whilst credit and EM spreads tightened. On credit, the positive developments at Aareal, NYCB and Pfandbriefbank gave further support.</p></br></br>\n
@@ -11,7 +19,7 @@ const MyRichTextEditor = () => {
   `; // Repeat the content to reach around 1000 lines
 
   const [editorState, setEditorState] = useState(() => {
-    const blocksFromHTML = convertFromHTML(dummyData);
+    const blocksFromHTML = convertFromHTML(draft);
     const contentState = ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,
       blocksFromHTML.entityMap

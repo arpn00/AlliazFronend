@@ -22,10 +22,11 @@ interface NewsLetterPageProps {
   startDate: Date;
   endDate: Date;
   selectedtrees: ItemProps[][];
+  draft : string
 }
 
 const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
-  const { documents, startDate, endDate, selectedtrees } = props;
+  const { documents, startDate, endDate, selectedtrees,draft } = props;
   const [showDocumentDialog, setShowDocumentDialog] = useState<boolean>(false);
   const [showTopicDocumentDialog, setTopicShowDocumentDialog] =
     useState<boolean>(false);
@@ -169,7 +170,7 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
               </div>
             </div>
             <div className="NewsletterDraftDiv">
-              <MyRichTextEditor></MyRichTextEditor>
+              <MyRichTextEditor draft={draft}></MyRichTextEditor>
             </div>
           </div>
           <div className="NewsLetterChatDiv">
