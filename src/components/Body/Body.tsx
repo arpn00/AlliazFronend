@@ -7,6 +7,13 @@ import TopicSelector from "../TopicSelection/TopicSelector.tsx";
 import SpinnerLogo from "../Spinner/Spinner.tsx";
 import NewsLetterPage from "../NewsLetter/NewsLetterPage.tsx";
 import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
+import {
+  TreeItemValue,
+  TreeSelectionValue,
+  HeadlessFlatTreeItemProps,
+} from "@fluentui/react-components";
+
+type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 
 interface BodyProps {}
 
@@ -21,6 +28,7 @@ const Body: FC<BodyProps> = (props) => {
   const [selectedDocuments, setSelectedDocuments] = useState<
     DocumentsResponse[]
   >([]);
+  const [selectedtrees, setSelectedtrees] = React.useState<ItemProps[][]>();
 
   const onContinue = () => {
     if (currentStep == 1) {
@@ -68,7 +76,11 @@ const Body: FC<BodyProps> = (props) => {
             ></SourcesTemplate>
           ) : null}
           {currentStep === 1 ? (
-            <TopicSelector onContinue={onContinue}></TopicSelector>
+            <TopicSelector
+              onContinue={onContinue}
+              selectedtrees={selectedtrees}
+              setSelectedtrees={setSelectedtrees}
+            ></TopicSelector>
           ) : null}
           {currentStep === 2 ? (
             <SourcesTemplate
@@ -80,7 +92,12 @@ const Body: FC<BodyProps> = (props) => {
           <div className="FooterGrid"></div>
         </div>
       ) : (
-        <NewsLetterPage documents={selectedDocuments} startDate={selectedStartDate!} endDate={selectedEndDate!}></NewsLetterPage>
+        <NewsLetterPage
+          documents={selectedDocuments}
+          startDate={selectedStartDate!}
+          endDate={selectedEndDate!}
+          selectedtrees={selectedtrees!}
+        ></NewsLetterPage>
       )}
     </>
   );

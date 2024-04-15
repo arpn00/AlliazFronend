@@ -29,16 +29,14 @@ import { AddPrompt } from "./Prompts/AddPrompt.tsx";
 
 type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 
-
-
 type CustomTreeItemProps = FlatTreeItemProps & {
   onRemoveItem?: (value: string) => void;
-  editMode ? : boolean
+  editMode?: boolean;
 };
 
 const CustomTreeItem = React.forwardRef(
   (
-    { onRemoveItem,editMode, ...props }: CustomTreeItemProps,
+    { onRemoveItem, editMode, ...props }: CustomTreeItemProps,
     ref: React.Ref<HTMLDivElement> | undefined
   ) => {
     const focusTargetAttribute = useRestoreFocusTarget();
@@ -61,7 +59,7 @@ const CustomTreeItem = React.forwardRef(
           >
             <TreeItemLayout
               actions={
-                isItemRemovable && editMode? (
+                isItemRemovable && editMode ? (
                   <>
                     <Button
                       aria-label="Remove item"
@@ -88,15 +86,21 @@ const CustomTreeItem = React.forwardRef(
 );
 
 interface TopicModalProps {
-  checkedItems: Map<TreeItemValue, TreeSelectionValue> | undefined;
-  setCheckedItems: React.Dispatch<Map<TreeItemValue, TreeSelectionValue>>;
+  checkedItems?: Map<TreeItemValue, TreeSelectionValue> | undefined;
+  setCheckedItems?: React.Dispatch<Map<TreeItemValue, TreeSelectionValue>>;
   trees: ItemProps[][];
-  setTrees: React.Dispatch<React.SetStateAction<ItemProps[][] | undefined>>;
-  editMode? : boolean;
+  setTrees?: React.Dispatch<React.SetStateAction<ItemProps[][] | undefined>>;
+  editMode?: boolean;
 }
 
 export const TopicModal: FC<TopicModalProps> = (props) => {
-  const { checkedItems, setCheckedItems, trees, setTrees , editMode = true} = props;
+  const {
+    checkedItems,
+    setCheckedItems,
+    trees,
+    setTrees,
+    editMode = true,
+  } = props;
   const [showPromptDialog, setShowPromptDialog] =
     React.useState<boolean>(false);
   const [subtreeIndex, setSubtreeIndex] = React.useState<number | undefined>(
@@ -123,7 +127,6 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     event: TreeOpenChangeEvent,
     data: TreeOpenChangeData
   ) => {
-    console.log(`Njan ${event} anu ${data}`);
     const value = data.value as string;
     if (value.endsWith("-btn")) {
       const subtreeIndex = Number(value[0]) - 1;
@@ -133,7 +136,7 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
   };
 
   const addFlatTreeItem = (subtreeIndex: number | undefined) =>
-    setTrees((currentTrees) => {
+    setTrees!((currentTrees) => {
       const lastItem =
         currentTrees![subtreeIndex!][currentTrees![subtreeIndex!].length - 1];
       const newItemValue = `${subtreeIndex! + 1}-${
@@ -160,11 +163,11 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     event: ChangeEvent<HTMLElement>,
     data: TreeCheckedChangeData
   ) => {
-    setCheckedItems(data.checkedItems);
+    setCheckedItems!(data.checkedItems);
   };
   const removeFlatTreeItem = React.useCallback(
     (value: string) =>
-      setTrees((currentTrees) => {
+      setTrees!((currentTrees) => {
         const subtreeIndex = Number(value[0]) - 1;
         const currentSubTree = trees[subtreeIndex];
         const itemIndex = currentSubTree.findIndex(
@@ -187,25 +190,26 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     [trees]
   );
   const SELECTION_MODE = "multiselect";
+
   const flatTree = useHeadlessFlatTree_unstable(
-    React.useMemo(
-      () => {
-        const itemsWithButtons = trees.flatMap((subtree, index) => {
-          const subtreeIndex = index + 1;
+    React.useMemo(() => {
+      const itemsWithButtons = trees.flatMap((subtree, index) => {
+        const subtreeIndex = index + 1;
+        if (editMode) {
           return [
             ...subtree,
             {
               value: `${subtreeIndex}-btn`,
               parentValue: subtree[0].value,
-              content: "Add new item",
-            }
+              content: "Add prompt",
+            },
           ];
-        });
-    
-        return itemsWithButtons;
-      },
-      [trees]
-    ),
+        } else {
+          return subtree;
+        }
+      });
+      return itemsWithButtons;
+    }, [trees]),
     {
       onOpenChange: handleOpenChange,
       selectionMode: editMode === true ? SELECTION_MODE : undefined,
@@ -249,7 +253,7 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
               key={item.value}
               onRemoveItem={removeFlatTreeItem}
               ref={item.value === itemToFocusValue ? itemToFocusRef : null}
-              editMode = {editMode}
+              editMode={editMode}
             >
               {content}
             </CustomTreeItem>

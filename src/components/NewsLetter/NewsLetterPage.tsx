@@ -10,22 +10,29 @@ import {
 } from "@fluentui/react-icons";
 import SelectedDocumentsGrid from "../DocumentSelector/SelectedDocumentsGrid.tsx";
 import { CommonDialog } from "../Dialog/CommonDialog.tsx";
-
 import Chat from "../../pages/chat/Chat.tsx";
 import { DocumentsResponse } from "../../api/models.ts";
+import { HeadlessFlatTreeItemProps } from "@fluentui/react-components";
+import { TopicModal } from "../TopicSelection/TopicModal.tsx";
+
+type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 
 interface NewsLetterPageProps {
   documents: DocumentsResponse[];
   startDate: Date;
   endDate: Date;
+  selectedtrees: ItemProps[][];
 }
 
 const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
-  const { documents, startDate, endDate } = props;
+  const { documents, startDate, endDate, selectedtrees } = props;
   const [showDocumentDialog, setShowDocumentDialog] = useState<boolean>(false);
+  const [showTopicDocumentDialog, setTopicShowDocumentDialog] =
+    useState<boolean>(false);
   const dateRange = `${startDate.toDateString()} - ${endDate.toDateString()}`;
   const onClose = () => {
     setShowDocumentDialog(false);
+    setTopicShowDocumentDialog(false);
   };
   const dummyData = `<h1>Bloomberg Market Research Report</h1>
   <p><b>Another week, another step closer to the first rate cut although the disinflation path remains bumpy.</b> With Jeremy Powell stating that interest rates cuts would be appropriate “at some point this year” and Christine Laggard referring to “dialling back monetary restrictions”, markets have priced a near certain first cut in June – as we expect, subject to further data releases until June. Whether the FED or the ECB will cut first remains less clear. Risky assets responded positively to the pending rate cuts, with equities mildly up, whilst credit and EM spreads tightened. On credit, the positive developments at Aareal, NYCB and Pfandbriefbank gave further support.</p><p></p>
@@ -64,7 +71,13 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
               </Text>
             </div>
             <div className="NewsletterHeader4-2">
-              <Link>Global Market</Link>
+              <Link
+                onClick={() => {
+                  setTopicShowDocumentDialog(true);
+                }}
+              >
+                Global Market
+              </Link>
             </div>
             <div className="NewsletterHeader4-3">
               <Text size={300} weight="semibold">
@@ -72,7 +85,17 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
               </Text>
             </div>
             <div className="NewsletterHeader4-4">
-              <Link>Market Shift</Link>
+              <Link
+                onClick={() => {
+                  setTopicShowDocumentDialog(true);
+                }}
+              >
+                {selectedtrees
+                  .flatMap((value, index) => {
+                    return value[0].content;
+                  })
+                  .join(" , ")}
+              </Link>
             </div>
           </div>
           <div className="NewsletterHeader5">
@@ -157,12 +180,17 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
         </div>
       </div>
       <CommonDialog
-        open={showDocumentDialog}
+        open={showDocumentDialog || showTopicDocumentDialog}
         secondaryActionText={"Cancel"}
-        maxWidth={600}
+        maxWidth={showDocumentDialog ? 600 : 1200}
         onSecondaryAction={onClose}
       >
-        <SelectedDocumentsGrid documents={documents}></SelectedDocumentsGrid>
+        {showDocumentDialog && (
+          <SelectedDocumentsGrid documents={documents}></SelectedDocumentsGrid>
+        )}
+        {showTopicDocumentDialog && (
+          <TopicModal trees={selectedtrees!} editMode={false}></TopicModal>
+        )}
       </CommonDialog>
     </div>
   );

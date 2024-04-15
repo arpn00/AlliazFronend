@@ -18,9 +18,11 @@ type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 
 interface TopicSelectorProps {
   onContinue: () => void;
+  selectedtrees: ItemProps[][] | undefined;
+  setSelectedtrees: React.Dispatch<ItemProps[][]>;
 }
 const TopicSelector: FC<TopicSelectorProps> = (props) => {
-  const { onContinue } = props;
+  const { onContinue, selectedtrees, setSelectedtrees } = props;
   const [questionnaire, setQuestionnaire] = useState<QuestionnaireResponse[]>(
     []
   );
@@ -37,6 +39,28 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
     const subtrees = createSubTreeFromQuestionnaire(questionnaire);
     setTrees(subtrees);
   }, [questionnaire]);
+
+  useEffect(() => {
+    if (checkedItems) {
+      const newSelectedTrees = calculateSelectedTrees(checkedItems);
+      setSelectedtrees(newSelectedTrees!);
+    }
+  }, [checkedItems, setSelectedtrees]);
+
+  const calculateSelectedTrees = (
+    checkedItems: Map<TreeItemValue, TreeSelectionValue>
+  ): ItemProps[][] | undefined => {
+    const checkedItemsArray = Array.from(checkedItems!)
+      .filter(
+        ([key, value]) => value === true && !key.toString().endsWith("-btn")
+      )
+      .map(([key, value]) => `${key}`);
+    return trees!.filter((subArray) => {
+      return subArray.some((item) =>
+        checkedItemsArray.includes(item.value.toString())
+      );
+    });
+  };
 
   const GetQuestionnaire = () => {
     getQuestionnaire()
