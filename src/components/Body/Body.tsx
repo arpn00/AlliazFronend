@@ -154,14 +154,13 @@ const Body: FC<BodyProps> = (props) => {
         // Return the promise for each createDraft call
         return createDraft(request, undefined).then(
           (response: NewsLetterResponse) => {
-            draft += `<p>${response.answer}</p> `;
+            draft += `<p>${response.answer}</p>`;
           }
         );
       });
 
       // Wait for all createDraft promises to resolve
       Promise.all(createDraftPromises).then(() => {
-        console.log(`Yes ${draft}`);
         setdraftData(draft);
         setCurrentStep(currentStep + 1);
       });

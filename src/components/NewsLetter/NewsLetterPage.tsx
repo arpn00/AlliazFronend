@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FC } from "react";
 import { Text, Button, Input, Link, Badge } from "@fluentui/react-components";
-import MyRichTextEditor from "../RichTextEditor/TextEditor.tsx";
+import TextEditor from "../RichTextEditor/TextEditor.tsx";
 import {
   CalendarDate24Regular,
   ArrowClockwise24Filled,
@@ -170,7 +170,7 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
               </div>
             </div>
             <div className="NewsletterDraftDiv">
-              <MyRichTextEditor draft={draft}></MyRichTextEditor>
+              <TextEditor draft={draft}></TextEditor>
             </div>
           </div>
           <div className="NewsLetterChatDiv">

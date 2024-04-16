@@ -51,7 +51,7 @@ const DocumentSelector: FC<DocumentSelectorProps> = (props) => {
         <div className="TopNavGrid">
           <div className="DocHeaderDiv">
             <Text size={500} weight="semibold">
-              Recent ({selectedRows})
+              Recent
             </Text>
           </div>
           <div className="AllSelectionDiv">
