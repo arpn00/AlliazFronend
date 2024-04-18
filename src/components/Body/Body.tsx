@@ -158,39 +158,13 @@ const Body: FC<BodyProps> = (props) => {
           }
         );
       });
-
+      
       // Wait for all createDraft promises to resolve
       Promise.all(createDraftPromises).then(() => {
         setdraftData(draft);
         setCurrentStep(currentStep + 1);
       });
 
-      // for (let i = 0; i < selectedtrees!.length; i++) {
-      //   let seachText = "";
-      //   let title = selectedtrees![i][0].content;
-      //   const importantNote =
-      //     questionnaire.find((item) => item.title === title)?.important_note ??
-      //     "";
-
-      //   const group = selectedtrees![i];
-      //   for (const item of group) {
-      //     if (item?.parentValue !== undefined) {
-      //       seachText += item.content + "? ";
-      //     }
-      //   }
-      //   seachText = seachText.slice(0, -2);
-      //   console.log(seachText);
-      //   let request = createResponseBodyForNewsLetter(
-      //     "STANDARD",
-      //     importantNote,
-      //     seachText
-      //   );
-      //   createDraft(request, undefined).then((response: NewsLetterResponse) => {
-      //     draft += `${response.answer} \n `
-      //     console.log(`Yes ${draft}`);
-      //     setCurrentStep(currentStep + 1);
-      //   });
-      // }
     }
   }, [currentStep]);
   return (

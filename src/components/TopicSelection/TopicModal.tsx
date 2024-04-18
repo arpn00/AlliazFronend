@@ -13,7 +13,7 @@ import {
   TreeSelectionValue,
   TreeCheckedChangeData,
 } from "@fluentui/react-components";
-import { Delete20Regular } from "@fluentui/react-icons";
+import { Delete20Regular, Edit20Regular } from "@fluentui/react-icons";
 import {
   Button,
   Menu,
@@ -31,12 +31,13 @@ type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 
 type CustomTreeItemProps = FlatTreeItemProps & {
   onRemoveItem?: (value: string) => void;
+  onUpdateItem?: (value: string) => void;
   editMode?: boolean;
 };
 
 const CustomTreeItem = React.forwardRef(
   (
-    { onRemoveItem, editMode, ...props }: CustomTreeItemProps,
+    { onRemoveItem, onUpdateItem, editMode, ...props }: CustomTreeItemProps,
     ref: React.Ref<HTMLDivElement> | undefined
   ) => {
     const focusTargetAttribute = useRestoreFocusTarget();
@@ -47,6 +48,10 @@ const CustomTreeItem = React.forwardRef(
     const handleRemoveItem = React.useCallback(() => {
       onRemoveItem?.(value);
     }, [value, onRemoveItem]);
+
+    const handleUpdateItem = React.useCallback(() => {
+      onUpdateItem?.(value);
+    }, [value, onUpdateItem]);
 
     return (
       <Menu positioning="below-end" openOnContext>
@@ -66,6 +71,12 @@ const CustomTreeItem = React.forwardRef(
                       appearance="subtle"
                       onClick={handleRemoveItem}
                       icon={<Delete20Regular />}
+                    />
+                    <Button
+                      aria-label="Remove item"
+                      appearance="subtle"
+                      onClick={handleUpdateItem}
+                      icon={<Edit20Regular />}
                     />
                   </>
                 ) : undefined
@@ -103,13 +114,17 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
   } = props;
   const [showPromptDialog, setShowPromptDialog] =
     React.useState<boolean>(false);
+    const [isNew, setIsNew] =
+    React.useState<boolean | undefined>(undefined);
   const [subtreeIndex, setSubtreeIndex] = React.useState<number | undefined>(
     undefined
   );
   const [newPrompt, setNewPrompt] = React.useState<string | undefined>(
     undefined
   );
-
+  const [currentItemIndex, setCurrentItemIndex] = React.useState<
+    number | undefined
+  >(undefined);
   const onClose = () => {
     setShowPromptDialog(false);
   };
@@ -119,6 +134,7 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     setNewPrompt(undefined);
     setShowPromptDialog(false);
   };
+
   const itemToFocusRef = React.useRef<HTMLDivElement>(null);
   const [itemToFocusValue, setItemToFocusValue] =
     React.useState<TreeItemValue>();
@@ -131,6 +147,7 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     if (value.endsWith("-btn")) {
       const subtreeIndex = Number(value[0]) - 1;
       setSubtreeIndex(subtreeIndex);
+      setIsNew(true);
       setShowPromptDialog(true);
     }
   };
@@ -165,6 +182,36 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
   ) => {
     setCheckedItems!(data.checkedItems);
   };
+
+  const updateFlatTreeItem = (value: string) => {
+    const subtreeIndex = Number(value[0]) - 1;
+    const currentSubTree = trees[subtreeIndex];
+    const itemIndex = currentSubTree.findIndex((item) => item.value === value);
+    const currentContent = currentSubTree[itemIndex].content;
+    setNewPrompt(currentContent);
+    setCurrentItemIndex(itemIndex);
+    setSubtreeIndex(subtreeIndex);
+    setIsNew(false);
+    setShowPromptDialog(true);
+  };
+
+  const onEditPromptSave = () => {
+    updateItem(subtreeIndex,currentItemIndex,newPrompt);
+    setNewPrompt(undefined);
+    setShowPromptDialog(false);
+  };
+
+  const updateItem = React.useCallback(
+    (subtreeIndex: number | undefined,currentItemIndex: number | undefined,newPrompt : string | undefined) =>
+      setTrees!((currentTrees) => {
+        currentTrees![subtreeIndex!].filter(
+            (_item, index) => index == currentItemIndex
+           )[0].content = newPrompt!;
+ return [...currentTrees!]
+      }),
+    [trees]
+  );
+
   const removeFlatTreeItem = React.useCallback(
     (value: string) =>
       setTrees!((currentTrees) => {
@@ -252,6 +299,7 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
               {...treeItemProps}
               key={item.value}
               onRemoveItem={removeFlatTreeItem}
+              onUpdateItem={updateFlatTreeItem}
               ref={item.value === itemToFocusValue ? itemToFocusRef : null}
               editMode={editMode}
             >
@@ -266,8 +314,10 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
         maxWidth={600}
         onSecondaryAction={onClose}
         primaryActionText="Save"
-        onPrimaryAction={onAddPromptSave}
-        title="Add new Prompt"
+        onPrimaryAction={
+          isNew === true ? onAddPromptSave : onEditPromptSave
+        }
+        title={isNew === true ? "Add new Prompt" : "Edit Prompt"}
         disablePrimaryAction={
           newPrompt === undefined || newPrompt === "undefined"
         }

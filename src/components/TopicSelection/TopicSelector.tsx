@@ -107,6 +107,7 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
           icon={<Next16Filled />}
           iconPosition="after"
           onClick={onContinue}
+          disabled = {selectedtrees === undefined || selectedtrees?.length ==0}
         >
           Create Draft
         </Button>
