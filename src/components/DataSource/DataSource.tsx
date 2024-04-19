@@ -141,7 +141,7 @@ const DataSource: FC<DataSourceProps> = (props) => {
       <div className="ContinueButtonDiv">
         <Button
           appearance="primary"
-          size="medium"
+          size="large"
           icon={<Next16Filled />}
           iconPosition="after"
           onClick={onContinue}

@@ -57,7 +57,7 @@
 .NewsletterHeader4 {
   display: grid; 
   grid-template-columns: 0.8fr 1.2fr; 
-  grid-template-rows: 0.5fr 1.5fr; 
+  grid-template-rows: 1fr 1fr; 
   gap: 10px 10px; 
   grid-template-areas: 
     "NewsletterHeader4-1 NewsletterHeader4-2"
@@ -138,7 +138,7 @@ background: #FFF;
   display: grid; 
   grid-auto-flow: column; 
   grid-auto-rows: 1fr; 
-  grid-template-columns: 0.3fr 1.7fr; 
+  grid-template-columns: 0.4fr 1.6fr; 
   gap: 0px 0px; 
   grid-area: NewsLetterMainDivHeaderDiv; 
   background-color: #F5F5F5;
@@ -149,7 +149,7 @@ background: #FFF;
   grid-area: 1 / 1 / 2 / 2; 
 }
 .NewsLetterMainDivHeaderDiv-2 {
-  justify-self: end; 
+  justify-self: start; 
   align-self: center; 
   grid-area: 1 / 2 / 2 / 3; 
 }

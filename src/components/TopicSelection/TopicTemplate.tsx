@@ -1,7 +1,8 @@
 import React from "react";
 import { FC } from "react";
 import { Edit24Filled, Add24Filled } from "@fluentui/react-icons";
-import IconButton from "@mui/material/IconButton";
+// import IconButton from "@mui/material/IconButton";
+import {  Button } from "@fluentui/react-components";
 
 interface TopicTemplateProps {
   heading: string;
@@ -16,17 +17,15 @@ export const TopicTemplate: FC<TopicTemplateProps> = ({
   onClick
 }) => {
   return (
-    <div className="card">
+    <div className="card" >
       <div className="card-heading">{heading}</div>
       <div className="icon">
         {newTemplate ? (
-          <IconButton onClick={onClick} disabled>
-            <Add24Filled primaryFill={color} ></Add24Filled>
-          </IconButton>
+          <Button appearance="subtle"  onClick={onClick} disabled> <Add24Filled primaryFill={color} ></Add24Filled></Button>
         ) : (
-          <IconButton onClick={onClick} >
+          <Button appearance="subtle" onClick={onClick} >
             <Edit24Filled primaryFill={color}></Edit24Filled>
-          </IconButton>
+          </Button>
         )}
       </div>
     </div>

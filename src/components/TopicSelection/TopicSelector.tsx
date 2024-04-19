@@ -103,7 +103,7 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
       <div className="ButtonDiv">
         <Button
           appearance="primary"
-          size="medium"
+          size="large"
           icon={<Next16Filled />}
           iconPosition="after"
           onClick={onContinue}

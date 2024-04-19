@@ -104,11 +104,23 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
                   setTopicShowDocumentDialog(true);
                 }}
               >
-                {selectedtrees
+                <Badge
+                  size="small"
+                  appearance="filled"
+                  color="brand"
+                  style={{ marginRight: "5px" }}
+                  onClick={() => {
+                    setTopicShowDocumentDialog(true);
+                  }}
+                >
+                  {selectedtrees.length ?? 0}
+                </Badge>
+                Selected
+                {/* {selectedtrees
                   .flatMap((value, index) => {
                     return value[0].content;
                   })
-                  .join(" , ")}
+                  .join(" , ")} */}
               </Link>
             </div>
           </div>
@@ -157,19 +169,19 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
           <div className="NewsLetterMainDiv">
             <div className="NewsLetterMainDivHeaderDiv">
               <div className="NewsLetterMainDivHeaderDiv-1">
-                <Text size={400} weight="semibold" color="#707070">
+                <Text size={300} weight="semibold" color="#707070">
                   Newsletter draft
                 </Text>
               </div>
               <div className="NewsLetterMainDivHeaderDiv-2">
                 <Text
-                  size={400}
+                  size={300}
                   weight="semibold"
                   color="#707070"
                   style={{ marginRight: "20px" }}
                 >
-                  AI Generated content might be wrong |{" "}
-                  <Link>How it works</Link> | <Link>Provide Feeback</Link>
+                  AI Generated content might be wrong | <Link>How it works</Link>{" "}
+                  | <Link>Provide Feeback</Link>
                 </Text>
                 <Button
                   iconPosition="before"
