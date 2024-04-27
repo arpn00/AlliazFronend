@@ -1,6 +1,12 @@
-import React, { useEffect, useMemo } from "react";
+import React, { ChangeEvent, useEffect, useMemo } from "react";
 import "./DataSource.css";
-import { Text, Checkbox, Button, Input } from "@fluentui/react-components";
+import {
+  Text,
+  Checkbox,
+  Button,
+  Input,
+  CheckboxOnChangeData,
+} from "@fluentui/react-components";
 import DateRange from "../DateRange.tsx";
 import { CounterBadge, Badge } from "@fluentui/react-components";
 import { CloudAdd24Filled, Next16Filled } from "@fluentui/react-icons";
@@ -14,16 +20,34 @@ import { DocumentsResponseBody, DocumentsResponse } from "../../api/models.ts";
 import { TableRowId } from "@fluentui/react-components";
 interface DataSourceProps {
   onContinue: () => void;
-  selectedStartDate : Date | null | undefined;
-  setSelectedStartDate :  React.Dispatch<React.SetStateAction<Date | null | undefined>>;
+  selectedStartDate: Date | null | undefined;
+  setSelectedStartDate: React.Dispatch<
+    React.SetStateAction<Date | null | undefined>
+  >;
   selectedEndDate: Date | null | undefined;
-  setSelectedEndDate:  React.Dispatch<React.SetStateAction<Date | null | undefined>>;
-  selectedDocuments : DocumentsResponse[];
-  setSelectedDocuments :  React.Dispatch<React.SetStateAction<DocumentsResponse[]>>;
+  setSelectedEndDate: React.Dispatch<
+    React.SetStateAction<Date | null | undefined>
+  >;
+  selectedDocuments: DocumentsResponse[];
+  setSelectedDocuments: React.Dispatch<
+    React.SetStateAction<DocumentsResponse[]>
+  >;
+  refinitiv: boolean | "mixed";
+  setRefinitiv: React.Dispatch<React.SetStateAction<boolean | "mixed">>;
 }
 
 const DataSource: FC<DataSourceProps> = (props) => {
-  const { onContinue,selectedStartDate,setSelectedStartDate,selectedEndDate,setSelectedEndDate,selectedDocuments,setSelectedDocuments } = props;
+  const {
+    refinitiv,
+    setRefinitiv,
+    onContinue,
+    selectedStartDate,
+    setSelectedStartDate,
+    selectedEndDate,
+    setSelectedEndDate,
+    selectedDocuments,
+    setSelectedDocuments,
+  } = props;
 
   const [showDocumentDialog, setshowDocumentDialog] = useState<boolean>(false);
   const [documentsFromSource, setDocumentsFromSource] = useState<
@@ -45,7 +69,6 @@ const DataSource: FC<DataSourceProps> = (props) => {
     Getdocuments();
   }, []);
 
-  
   const Getdocuments = () => {
     getDocuments()
       .then(() => {
@@ -71,7 +94,16 @@ const DataSource: FC<DataSourceProps> = (props) => {
         </Text>
       </div>
       <div className="SourceCheckBoxDiv">
-        <Checkbox label="Refinitiv" />
+        <Checkbox
+          label="Refinitiv"
+          checked={refinitiv}
+          onChange={(
+            ev: ChangeEvent<HTMLInputElement>,
+            data: CheckboxOnChangeData
+          ) => {
+            setRefinitiv(data.checked);
+          }}
+        />
       </div>
       <div className="TimeFrameDiv">
         <Text size={500} weight="semibold">
@@ -142,13 +174,13 @@ const DataSource: FC<DataSourceProps> = (props) => {
         <Button
           appearance="primary"
           size="large"
-          icon={<Next16Filled />}
+          icon={<Next16Filled title="View Document" />}
           iconPosition="after"
           onClick={onContinue}
           disabled={
-            selectedRows.size === 0 ||
             selectedStartDate === null ||
-            selectedEndDate === null
+            selectedEndDate === null ||
+            (selectedRows.size === 0 && refinitiv === false)
           }
         >
           Continue
@@ -157,7 +189,7 @@ const DataSource: FC<DataSourceProps> = (props) => {
       <CommonDialog
         open={showDocumentDialog}
         secondaryActionText={"Close"}
-        maxWidth={1200}
+        maxWidth={1000}
         onSecondaryAction={onClose}
       >
         <DocumentSelector

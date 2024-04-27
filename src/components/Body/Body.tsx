@@ -42,6 +42,7 @@ const Body: FC<BodyProps> = (props) => {
     []
   );
   const [draftData, setdraftData] = useState<string>("");
+  const [refinitiv,setRefinitiv] = useState<boolean | "mixed">(false);
   const onContinue = () => {
     if (currentStep === 1) {
       setCurrentStep(currentStep + 1);
@@ -189,6 +190,8 @@ const Body: FC<BodyProps> = (props) => {
               selectedDocuments={selectedDocuments}
               setSelectedDocuments={setSelectedDocuments}
               onContinue={onContinue}
+              refinitiv = {refinitiv}
+              setRefinitiv={setRefinitiv}
             ></DataSource>
           ) : null}
           {currentStep === 1 ? (
