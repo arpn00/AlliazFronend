@@ -108,6 +108,18 @@ export type NewsLetterRequest = {
     important_note: string;
     search_text: string;
     question_type: string;
+    date_from:string;
+    date_to : string;
+    filter_str : string;
+    answer_length : string;
+    data_source_refinitiv : boolean;
+    data_source_email : boolean;
+    data_source_email_list : string[] | undefined;
+    session_id : string;
+    user_id : string;
+    chat_id : string
+    paragraph_id : string | undefined
+
 };
 
 export type NewsLetterResponse = {

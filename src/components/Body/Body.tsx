@@ -17,7 +17,7 @@ import {
   TreeSelectionValue,
   HeadlessFlatTreeItemProps,
 } from "@fluentui/react-components";
-
+import { useMsal } from "@azure/msal-react";
 import { createDraft, getQuestionnaire } from "../../api/api.ts";
 
 import { createResponseBodyForNewsLetter } from "../../Util/Util.ts";
@@ -42,7 +42,13 @@ const Body: FC<BodyProps> = (props) => {
     []
   );
   const [draftData, setdraftData] = useState<string>("");
-  const [refinitiv,setRefinitiv] = useState<boolean | "mixed">(false);
+  const [refinitiv, setRefinitiv] = useState<boolean | "mixed">(false);
+  const [topicParagraph, setTopicParagraph] = useState(new Map());
+  const { instance } = useMsal();
+  const activeAccount = instance.getActiveAccount();
+  const sessionId = crypto.randomUUID();
+  const chatId = crypto.randomUUID();
+
   const onContinue = () => {
     if (currentStep === 1) {
       setCurrentStep(currentStep + 1);
@@ -146,26 +152,33 @@ const Body: FC<BodyProps> = (props) => {
           }
         }
         seachText = seachText.slice(0, -2);
-        console.log(seachText);
         const request = createResponseBodyForNewsLetter(
           "STANDARD",
           importantNote,
-          seachText
+          topicParagraph.get(group[0].content),
+          refinitiv,
+          selectedDocuments.length > 0,
+          selectedDocuments.map((x) => x.name),
+          sessionId,
+          activeAccount?.username ?? crypto.randomUUID(),
+          chatId,
+          seachText,
+          selectedStartDate!,
+          selectedEndDate!
         );
-        // Return the promise for each createDraft call
+       
         return createDraft(request, undefined).then(
           (response: NewsLetterResponse) => {
             draft += `<p>${response.answer}</p>`;
           }
         );
       });
-      
+
       // Wait for all createDraft promises to resolve
       Promise.all(createDraftPromises).then(() => {
         setdraftData(draft);
         setCurrentStep(currentStep + 1);
       });
-
     }
   }, [currentStep]);
   return (
@@ -190,13 +203,13 @@ const Body: FC<BodyProps> = (props) => {
               selectedDocuments={selectedDocuments}
               setSelectedDocuments={setSelectedDocuments}
               onContinue={onContinue}
-              refinitiv = {refinitiv}
+              refinitiv={refinitiv}
               setRefinitiv={setRefinitiv}
             ></DataSource>
           ) : null}
           {currentStep === 1 ? (
             <SourcesTemplate
-              heading="Template and topic selection"
+              heading="Template and Topic selection"
               activeStep={currentStep}
             ></SourcesTemplate>
           ) : null}
@@ -206,6 +219,8 @@ const Body: FC<BodyProps> = (props) => {
               selectedtrees={selectedtrees}
               setSelectedtrees={setSelectedtrees}
               questionnaire={questionnaire}
+              topicParagraph={topicParagraph}
+              setTopicParagraph={setTopicParagraph}
             ></TopicSelector>
           ) : null}
           {currentStep === 2 ? (
@@ -223,7 +238,9 @@ const Body: FC<BodyProps> = (props) => {
           startDate={selectedStartDate!}
           endDate={selectedEndDate!}
           selectedtrees={selectedtrees!}
-          draft= {draftData}
+          draft={draftData}
+          topicParagraph={topicParagraph}
+          setTopicParagraph={setTopicParagraph}
         ></NewsLetterPage>
       )}
     </>

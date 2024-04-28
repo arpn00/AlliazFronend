@@ -26,10 +26,13 @@ interface NewsLetterPageProps {
   endDate: Date;
   selectedtrees: ItemProps[][];
   draft: string;
+  topicParagraph: Map<string, string>;
+  setTopicParagraph: React.Dispatch<Map<string, string>>;
+
 }
 
 const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
-  const { documents, startDate, endDate, selectedtrees, draft } = props;
+  const { documents, startDate, endDate, selectedtrees, draft,topicParagraph,setTopicParagraph } = props;
   const [showDocumentDialog, setShowDocumentDialog] = useState<boolean>(false);
   const [showTopicDocumentDialog, setTopicShowDocumentDialog] =
     useState<boolean>(false);
@@ -51,7 +54,6 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
     const htmlContent = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-    console.log(`Html ${htmlContent}`);
   };
 
   return (
@@ -220,7 +222,14 @@ const NewsLetterPage: FC<NewsLetterPageProps> = (props) => {
           <SelectedDocumentsGrid documents={documents}></SelectedDocumentsGrid>
         )}
         {showTopicDocumentDialog && (
-          <TopicModal trees={selectedtrees!} editMode={false}></TopicModal>
+          <TopicModal 
+          trees={selectedtrees!} 
+          editMode={true} 
+          topicParagraph={topicParagraph}
+          setTopicParagraph={setTopicParagraph}
+          >
+
+          </TopicModal>
         )}
       </CommonDialog>
     </div>

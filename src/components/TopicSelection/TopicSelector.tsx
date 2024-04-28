@@ -21,9 +21,12 @@ interface TopicSelectorProps {
   selectedtrees: ItemProps[][] | undefined;
   setSelectedtrees: React.Dispatch<ItemProps[][]>;
   questionnaire: QuestionnaireResponse[];
+  topicParagraph: Map<string, string>;
+  setTopicParagraph: React.Dispatch<Map<string, string>>;
+
 }
 const TopicSelector: FC<TopicSelectorProps> = (props) => {
-  const { onContinue, selectedtrees, setSelectedtrees, questionnaire } = props;
+  const { onContinue, selectedtrees, setSelectedtrees, questionnaire,topicParagraph,setTopicParagraph } = props;
   const [showPromptDialog, setShowPromptDialog] = useState<boolean>(false);
   const [checkedItems, setCheckedItems] =
     React.useState<Map<TreeItemValue, TreeSelectionValue>>();
@@ -123,6 +126,8 @@ const TopicSelector: FC<TopicSelectorProps> = (props) => {
           setCheckedItems={setCheckedItems}
           setTrees={setTrees}
           trees={trees!}
+          topicParagraph={topicParagraph}
+          setTopicParagraph={setTopicParagraph}
         ></TopicModal>
       </CommonDialog>
     </div>

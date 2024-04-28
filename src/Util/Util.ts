@@ -1,4 +1,4 @@
-import { QuestionnaireResponse,NewsLetterRequest } from "../api/models.ts";
+import { QuestionnaireResponse, NewsLetterRequest } from "../api/models.ts";
 import {
     HeadlessFlatTreeItemProps,
 } from "@fluentui/react-components";
@@ -15,7 +15,7 @@ export function createSubTreeFromQuestionnaire(
             subtree.push({
                 value: `${index + 1}-${idx + 1}`,
                 parentValue: `${index + 1}`,
-                content: RemoveLastCharacterOccurance(searchText,"?"),
+                content: RemoveLastCharacterOccurance(searchText, "?"),
             });
         });
 
@@ -27,12 +27,12 @@ export function createSubTreeFromQuestionnaire(
 
 export function RemoveLastCharacterOccurance(
     text: string,
-    stringToRemoev:string
+    stringToRemoev: string
 ): string {
 
     const lastIndex = text.lastIndexOf(stringToRemoev);
     if (lastIndex !== -1) {
-      return text.slice(0, lastIndex) + text.slice(lastIndex + 1);
+        return text.slice(0, lastIndex) + text.slice(lastIndex + 1);
     }
     return text;
 }
@@ -40,13 +40,44 @@ export function RemoveLastCharacterOccurance(
 export function createResponseBodyForNewsLetter(
     questionType: string,
     importantNote: string,
-    searchText?: string | undefined): NewsLetterRequest {
+    answerLength: string,
+    isRefinitv,
+    hasAdditionalDocuments,
+    additionalDocuments: string[],
+    seesionId: string,
+    userId: string,
+    chatId: string,
+    searchText?: string | undefined,
+    selectedStartDate?: Date,
+    selectedEndDate?: Date,
+    paragraghId?: string
+
+): NewsLetterRequest {
 
     let request: NewsLetterRequest = {
         important_note: importantNote,
         search_text: searchText === undefined ? "" : searchText,
-        question_type: questionType
+        question_type: questionType,
+        date_from: onFormatDate(selectedStartDate),
+        date_to: onFormatDate(selectedEndDate),
+        filter_str: "",
+        answer_length: answerLength,
+        data_source_refinitiv: isRefinitv,
+        data_source_email: hasAdditionalDocuments,
+        data_source_email_list: hasAdditionalDocuments ? additionalDocuments : [],
+        session_id: seesionId,
+        user_id: userId,
+        chat_id: chatId,
+        paragraph_id: paragraghId ?? ""
+
     };
 
     return request;
 }
+
+
+export function onFormatDate(date?: Date): string {
+    return !date
+        ? ""
+        : `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+};

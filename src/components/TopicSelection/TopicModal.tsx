@@ -12,8 +12,16 @@ import {
   FlatTreeItemProps,
   TreeSelectionValue,
   TreeCheckedChangeData,
+  Tooltip,
 } from "@fluentui/react-components";
-import { Delete20Regular, Edit20Regular } from "@fluentui/react-icons";
+import {
+  Delete20Regular,
+  Delete20Filled,
+  Edit20Regular,
+  Add20Regular,
+  TextNumberFormat20Regular,
+  bundleIcon,
+} from "@fluentui/react-icons";
 import {
   Button,
   Menu,
@@ -32,26 +40,42 @@ type ItemProps = HeadlessFlatTreeItemProps & { content: string };
 type CustomTreeItemProps = FlatTreeItemProps & {
   onRemoveItem?: (value: string) => void;
   onUpdateItem?: (value: string) => void;
+  onAddItem?: (value: string) => void;
+  onAddLength?: (value: string) => void;
   editMode?: boolean;
 };
 
 const CustomTreeItem = React.forwardRef(
   (
-    { onRemoveItem, onUpdateItem, editMode, ...props }: CustomTreeItemProps,
+    {
+      onRemoveItem,
+      onUpdateItem,
+      onAddItem,
+      onAddLength,
+      editMode,
+      ...props
+    }: CustomTreeItemProps,
     ref: React.Ref<HTMLDivElement> | undefined
   ) => {
     const focusTargetAttribute = useRestoreFocusTarget();
     const level = props["aria-level"];
     const value = props.value as string;
     const isItemRemovable = level !== 1 && !value.endsWith("-btn");
-
     const handleRemoveItem = React.useCallback(() => {
       onRemoveItem?.(value);
     }, [value, onRemoveItem]);
 
+    const handleAddItem = React.useCallback(() => {
+      onAddItem?.(value);
+    }, [value, onAddItem]);
+
     const handleUpdateItem = React.useCallback(() => {
       onUpdateItem?.(value);
     }, [value, onUpdateItem]);
+
+    const handleAddLength = React.useCallback(() => {
+      onAddLength?.(value);
+    }, [value, onAddLength]);
 
     return (
       <Menu positioning="below-end" openOnContext>
@@ -66,20 +90,49 @@ const CustomTreeItem = React.forwardRef(
               actions={
                 isItemRemovable && editMode ? (
                   <>
-                    <Button
-                      aria-label="Remove item"
-                      appearance="subtle"
-                      onClick={handleRemoveItem}
-                      icon={<Delete20Regular />}
-                    />
-                    <Button
-                      aria-label="Remove item"
-                      appearance="subtle"
-                      onClick={handleUpdateItem}
-                      icon={<Edit20Regular />}
-                    />
+                    <Tooltip content="Remove" relationship="description">
+                      <Button
+                        aria-label="Remove item"
+                        appearance="subtle"
+                        onClick={handleRemoveItem}
+                        icon={<Delete20Regular />}
+                      />
+                    </Tooltip>
+                    <Tooltip content="Edit" relationship="description">
+                      <Button
+                        aria-label="Edit prompt"
+                        appearance="subtle"
+                        onClick={handleUpdateItem}
+                        icon={<Edit20Regular />}
+                      />
+                    </Tooltip>
                   </>
-                ) : undefined
+                ) : (
+                  <>
+                    <Tooltip
+                      content="Set length for Topic"
+                      relationship="description"
+                    >
+                      <Button
+                        aria-label="Add Length"
+                        appearance="subtle"
+                        onClick={handleAddLength}
+                        icon={<TextNumberFormat20Regular />}
+                      />
+                    </Tooltip>
+                    <Tooltip
+                      content="Add new prompt"
+                      relationship="description"
+                    >
+                      <Button
+                        aria-label="Add Sub Prompt"
+                        appearance="subtle"
+                        onClick={handleAddItem}
+                        icon={<Add20Regular />}
+                      />
+                    </Tooltip>
+                  </>
+                )
               }
             >
               {props.children}
@@ -102,6 +155,8 @@ interface TopicModalProps {
   trees: ItemProps[][];
   setTrees?: React.Dispatch<React.SetStateAction<ItemProps[][] | undefined>>;
   editMode?: boolean;
+  topicParagraph: Map<string, string>;
+  setTopicParagraph: React.Dispatch<Map<string, string>>;
 }
 
 export const TopicModal: FC<TopicModalProps> = (props) => {
@@ -111,27 +166,48 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     trees,
     setTrees,
     editMode = true,
+    topicParagraph,
+    setTopicParagraph
   } = props;
   const [showPromptDialog, setShowPromptDialog] =
     React.useState<boolean>(false);
-    const [isNew, setIsNew] =
-    React.useState<boolean | undefined>(undefined);
+  const [isNew, setIsNew] = React.useState<boolean | undefined>(undefined);
+  const [isParagraphLength, setIsParagraphLength] = React.useState<
+    boolean | undefined
+  >(undefined);
   const [subtreeIndex, setSubtreeIndex] = React.useState<number | undefined>(
     undefined
   );
   const [newPrompt, setNewPrompt] = React.useState<string | undefined>(
     undefined
   );
+  const [newParagraphLength, setNewParagraphLength] = React.useState<
+    string | undefined
+  >(undefined);
   const [currentItemIndex, setCurrentItemIndex] = React.useState<
     number | undefined
   >(undefined);
   const onClose = () => {
+    setNewPrompt(undefined);
+    setIsParagraphLength(false);
+    setIsNew(false);
+    setNewParagraphLength(undefined);
     setShowPromptDialog(false);
   };
 
   const onAddPromptSave = () => {
     addFlatTreeItem(subtreeIndex);
     setNewPrompt(undefined);
+    setShowPromptDialog(false);
+  };
+
+  const onAddPromptLengthSave = () => {
+    const newMap = new Map(topicParagraph);
+    const currentItem =   trees![subtreeIndex!] ;
+    newMap.set(currentItem[0].content, newParagraphLength!);
+    setTopicParagraph(newMap);
+    setIsParagraphLength(false);
+    setNewParagraphLength(undefined);
     setShowPromptDialog(false);
   };
 
@@ -183,6 +259,28 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     setCheckedItems!(data.checkedItems);
   };
 
+  const addPrompt = (value: string) => {
+    const subtreeIndex = Number(value[0]) - 1;
+    setSubtreeIndex(subtreeIndex);
+    setIsNew(true);
+    setShowPromptDialog(true);
+  };
+
+  const addParagraphLength = (value: string) => {
+    const subtreeIndex = Number(value[0]) - 1;
+    const currentContent = trees[subtreeIndex];
+    if (topicParagraph.has(currentContent[0].content)) {
+      
+      setNewParagraphLength(topicParagraph.get(currentContent[0].content));
+    } else {
+      setNewParagraphLength(undefined);
+    }
+    setShowPromptDialog(true);
+    setIsParagraphLength(true);
+    setSubtreeIndex(subtreeIndex);
+
+  };
+
   const updateFlatTreeItem = (value: string) => {
     const subtreeIndex = Number(value[0]) - 1;
     const currentSubTree = trees[subtreeIndex];
@@ -196,18 +294,22 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
   };
 
   const onEditPromptSave = () => {
-    updateItem(subtreeIndex,currentItemIndex,newPrompt);
+    updateItem(subtreeIndex, currentItemIndex, newPrompt);
     setNewPrompt(undefined);
     setShowPromptDialog(false);
   };
 
   const updateItem = React.useCallback(
-    (subtreeIndex: number | undefined,currentItemIndex: number | undefined,newPrompt : string | undefined) =>
+    (
+      subtreeIndex: number | undefined,
+      currentItemIndex: number | undefined,
+      newPrompt: string | undefined
+    ) =>
       setTrees!((currentTrees) => {
         currentTrees![subtreeIndex!].filter(
-            (_item, index) => index == currentItemIndex
-           )[0].content = newPrompt!;
- return [...currentTrees!]
+          (_item, index) => index == currentItemIndex
+        )[0].content = newPrompt!;
+        return [...currentTrees!];
       }),
     [trees]
   );
@@ -242,18 +344,19 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
     React.useMemo(() => {
       const itemsWithButtons = trees.flatMap((subtree, index) => {
         const subtreeIndex = index + 1;
-        if (editMode) {
-          return [
-            ...subtree,
-            {
-              value: `${subtreeIndex}-btn`,
-              parentValue: subtree[0].value,
-              content: "Add prompt",
-            },
-          ];
-        } else {
-          return subtree;
-        }
+        return subtree;
+        // if (editMode) {
+        //   return [
+        //     ...subtree,
+        //     {
+        //       value: `${subtreeIndex}-btn`,
+        //       parentValue: subtree[0].value,
+        //       content: "Add prompt",
+        //     },
+        //   ];
+        // } else {
+        //   return subtree;
+        // }
       });
       return itemsWithButtons;
     }, [trees]),
@@ -300,6 +403,8 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
               key={item.value}
               onRemoveItem={removeFlatTreeItem}
               onUpdateItem={updateFlatTreeItem}
+              onAddItem={addPrompt}
+              onAddLength={addParagraphLength}
               ref={item.value === itemToFocusValue ? itemToFocusRef : null}
               editMode={editMode}
             >
@@ -315,16 +420,33 @@ export const TopicModal: FC<TopicModalProps> = (props) => {
         onSecondaryAction={onClose}
         primaryActionText="Save"
         onPrimaryAction={
-          isNew === true ? onAddPromptSave : onEditPromptSave
+          isParagraphLength === true
+            ? onAddPromptLengthSave
+            : isNew === true
+            ? onAddPromptSave
+            : onEditPromptSave
         }
-        title={isNew === true ? "Add new Prompt" : "Edit Prompt"}
+        title={
+          isParagraphLength === true
+            ? "Enter lenth of Paragaraph"
+            : isNew === true
+            ? "Add New Prompt"
+            : "Edit Prompt"
+        }
         disablePrimaryAction={
-          newPrompt === undefined || newPrompt === "undefined"
+          isParagraphLength !== true
+            ? newPrompt === undefined || newPrompt === "undefined"
+            : newParagraphLength === undefined ||
+              newParagraphLength === "undefined"
         }
       >
         <AddPrompt
-          setNewPrompt={setNewPrompt}
-          newPrompt={newPrompt}
+          setNewPrompt={
+            isParagraphLength === true ? setNewParagraphLength : setNewPrompt
+          }
+          newPrompt={
+            isParagraphLength === true ? newParagraphLength : newPrompt
+          }
         ></AddPrompt>
       </CommonDialog>
     </>
